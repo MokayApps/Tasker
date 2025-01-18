@@ -13,7 +13,7 @@ struct TaskListAssembly {
 	func assemble(container: Container) {
 		container.register(TaskListView.self) { resolver in
 			MainActor.assumeIsolated {
-                TaskListView()
+                TaskListView(viewModel: TaskListViewModel())
 			}
 		}
 	}
