@@ -1,0 +1,15 @@
+{
+  "originHash" : "362f88b8b0a1422bfc12fa1bf99d15f1c950d50f7b216d2ceee664a1b07760a7",
+  "pins" : [
+    {
+      "identity" : "mokay",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MokayApps/Mokay.git",
+      "state" : {
+        "revision" : "754dfae0658edaee62d3b3cf7087d5fbd1735670",
+        "version" : "1.6.0"
+      }
+    }
+  ],
+  "version" : 3
+}
