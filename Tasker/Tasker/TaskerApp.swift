@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MokayDI
 
 @main
 struct TaskerApp: App {
@@ -22,10 +23,19 @@ struct TaskerApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    init() {
+        AppAssembly().assemble(container: Container.main)
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .foregroundStyle(
+                    .black,
+                    .black.opacity(0.8),
+                    .black.opacity(0.5)
+                )
         }
         .modelContainer(sharedModelContainer)
     }
