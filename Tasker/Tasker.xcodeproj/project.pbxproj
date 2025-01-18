@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */ = {isa = PBXBuildFile; productRef = 4D88723E2D3BC720007E0B4A /* Mokay */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		1C39E6732D29748400A12CCB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Tasker;
 			packageProductDependencies = (
+				4D88723E2D3BC720007E0B4A /* Mokay */,
 			);
 			productName = Tasker;
 			productReference = 1C39E6602D29748300A12CCB /* Tasker.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 1C39E6572D29748300A12CCB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1C39E6612D29748300A12CCB /* Products */;
 			projectDirPath = "";
@@ -562,6 +571,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MokayApps/Mokay.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4D88723E2D3BC720007E0B4A /* Mokay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */;
+			productName = Mokay;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1C39E6582D29748300A12CCB /* Project object */;
 }
