@@ -12,7 +12,7 @@ struct SettingsAssembly {
 	func assemble(container: Container) {
 		container.register(SettingsView.self) { resolver in
 			MainActor.assumeIsolated {
-                SettingsView()
+                SettingsView(viewModel: SettingsViewModel())
 			}
 		}
 	}
