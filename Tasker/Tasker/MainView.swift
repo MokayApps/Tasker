@@ -12,9 +12,13 @@ import MokayDI
 struct MainView: View {
     
     var body: some View {
-        RouterView<TaskListView>(container: .main, router: Router(container: .main))
+        RouterView<TaskListView>(
+            container: .main,
+            router: Router(container: .main)
+        )
+        .backgroundStyle(.gray)
     }
-
+    
 }
 
 #Preview {
