@@ -14,6 +14,7 @@ final class Router: Sendable {
 
     let container: Container
     var path: NavigationPath = NavigationPath()
+    var presentedScreen: Screen?
     
     init(
         container: Container
@@ -21,8 +22,8 @@ final class Router: Sendable {
         self.container = container
     }
     
-    @ViewBuilder func view(for route: Route) -> some View {
-        switch route {
+    @ViewBuilder func view(for screen: Screen) -> some View {
+        switch screen {
         case .taskList:
             container.resolve(TaskListView.self)
         case .settings:
@@ -32,8 +33,19 @@ final class Router: Sendable {
         }
     }
     
-    func push(_ appRoute: Route) {
-        path.append(appRoute)
+    @ViewBuilder func routerView(for screen: Screen) -> some View {
+        switch screen {
+        case .taskList:
+            container.resolve(TaskListView.self)
+        case .settings:
+            container.resolve(SettingsView.self)
+        case .search:
+            RouterView<SearchView>(container: container, router: Router(container: container))
+        }
+    }
+    
+    func push(_ screen: Screen) {
+        path.append(screen)
     }
     
     func pop() {
@@ -42,5 +54,13 @@ final class Router: Sendable {
     
     func popToRoot() {
         path.removeLast(path.count)
+    }
+    
+    func present(_ screen: Screen) {
+        presentedScreen = screen
+    }
+    
+    func dismiss() {
+        presentedScreen = nil
     }
 }

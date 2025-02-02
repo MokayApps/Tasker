@@ -26,24 +26,21 @@ struct TaskListView: View {
             LazyVGrid(columns: gridItems) {
                 ForEach(viewModel.tasks) { task in
                     TaskRow(viewModel: task)
-                    //                NavigationLink {
-                    //                    Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    //                } label: {
-                    //                    Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    //                }
                 }
             }
             .padding(.x2)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: onSettingsTapped) {
-                        Image(systemName: "gearshape.fill")
+                        Image("control")
                     }
+                    .buttonStyle(.primaryMedium)
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: onSearchTapped) {
-                        Image(systemName: "magnifyingglass")
+                        Image("search")
                     }
+                    .buttonStyle(.primaryMedium)
                 }
             }
         }
@@ -57,6 +54,6 @@ struct TaskListView: View {
     }
 
     private func onSearchTapped() {
-        router.push(.search)
+        router.present(.search)
     }
 }
