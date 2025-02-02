@@ -34,13 +34,13 @@ struct TaskListView: View {
                     Button(action: onSettingsTapped) {
                         Image("control")
                     }
-                    .buttonStyle(.primaryMedium)
+                    .buttonStyle(.primarySmall)
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: onSearchTapped) {
                         Image("search")
                     }
-                    .buttonStyle(.primaryMedium)
+                    .buttonStyle(.primarySmall)
                 }
             }
         }
