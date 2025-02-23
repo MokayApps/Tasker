@@ -12,7 +12,7 @@ struct SearchAssembly {
 	func assemble(container: Container) {
 		container.register(SearchView.self) { resolver in
 			MainActor.assumeIsolated {
-                SearchView()
+				SearchView(viewModel: SearchViewModel())
 			}
 		}
 	}

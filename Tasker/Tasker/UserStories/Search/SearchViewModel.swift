@@ -15,16 +15,32 @@ struct TaskCategory: Hashable, Identifiable {
 	var color: Color = .blue
 }
 
+struct SearchSection: Identifiable {
+	let id: String = UUID().uuidString
+	let title: String
+	let items: [String]
+}
+
 @MainActor
 @Observable
 final class SearchViewModel {
 	
-	let categories: [TaskCategory]
+	enum ViewState {
+		case empty
+		case result(sections: [SearchSection])
+		case error
+	}
 	
-	var filteredCategories: [TaskCategory] = []
+	let categories: [TaskCategory]
 	var selectedCategory: TaskCategory?
 	
-	var searchText: String = ""
+	var searchText: String = "" {
+		didSet { updateViewState() }
+	}
+	
+	var viewState: ViewState = .empty
+	
+	private let allTasks: [String]
 	
 	init() {
 		categories = [
@@ -35,21 +51,30 @@ final class SearchViewModel {
 			TaskCategory(icon: "⚽️", title: "Sport", color: .pink),
 		]
 		
-		filteredCategories = categories
+		allTasks = [
+			"Buy groceries", "Workout", "Meeting with team", "Dentist appointment", "Call mom",
+			"Finish project", "Read book", "Plan vacation", "Pay bills", "Learn Swift",
+			"Write article", "Go to the gym", "Buy new laptop", "Cook dinner", "Walk the dog"
+		]
 	}
 	
 	var queryStringBinding: Binding<String> {
-		return Binding<String> {
-			return self.searchText
-		} set: { newValue in
-			self.searchText = newValue
-			self.filteredCategories = self.filteredCategories(queryString: newValue)
-		}
+		Binding(
+			get: { self.searchText },
+			set: { self.searchText = $0 }
+		)
 	}
 	
-	func filteredCategories(queryString: String) -> [TaskCategory] {
-		return queryString.isEmpty ? categories : categories.filter { category in
-			category.title.localizedCaseInsensitiveContains(queryString)
+	private func updateViewState() {
+		guard !searchText.isEmpty else {
+			viewState = .empty
+			return
 		}
+		
+		let filteredTasks = allTasks.filter { $0.localizedCaseInsensitiveContains(searchText) }
+		
+		viewState = filteredTasks.isEmpty
+		? .error
+		: .result(sections: filteredTasks.map { SearchSection(title: "Task: \($0)", items: [$0]) })
 	}
 }
