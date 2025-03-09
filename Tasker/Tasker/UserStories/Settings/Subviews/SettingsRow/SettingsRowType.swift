@@ -5,7 +5,7 @@
 //  Created by Дмитрий Бондаренко on 28.01.2025.
 //
 
-enum SettingsRowType: Hashable {
+enum SettingsRowType: Hashable, CaseIterable {
     
     case categories
     case notifications

@@ -38,7 +38,7 @@ struct SettingsRow: View {
                 description: viewModel.subtitle,
                 showRedDot: false
             )
-            .frame(width: .infinity, height: 72)
+            .frame(maxWidth: .infinity, maxHeight: 72)
         
     }
     

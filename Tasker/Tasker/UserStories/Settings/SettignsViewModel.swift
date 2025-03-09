@@ -20,7 +20,15 @@ final class SettingsViewModel {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        sections = [
+        
+        sections = buildSections()
+        setupBindings()
+    }
+    
+    // MARK: - Private methods
+    
+    private func buildSections() -> [SettingsSection] {
+        return [
             SettingsSection(
                 id: UUID(),
                 title: "APP",
@@ -51,11 +59,7 @@ final class SettingsViewModel {
                 ]
             )
         ]
-        
-        setupBindings()
     }
-    
-    // MARK: - Private methods
     
     private func setupBindings() {
         rowTappedSubject
