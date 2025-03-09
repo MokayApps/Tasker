@@ -8,7 +8,16 @@
 import SwiftUI
 
 struct SearchView: View {
+    
+    @Environment(Router.self) var router
+    
     var body: some View {
         Text("SearchView")
+        Button {
+            router.present(.settings)
+        } label: {
+            Text("Tap me!")
+        }
+
     }
 }

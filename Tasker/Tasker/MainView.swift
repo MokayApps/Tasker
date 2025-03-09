@@ -11,18 +11,14 @@ import MokayDI
 
 struct MainView: View {
     
-    @State var taskListRouter: Router = Router(container: Container.main)
-
     var body: some View {
-        NavigationStack(path: $taskListRouter.path) {
-            taskListRouter.view(for: .taskList)
-                .navigationDestination(for: Route.self) { route in
-                    taskListRouter.view(for: route)
-                }
-        }
-        .environment(taskListRouter)
+        RouterView<TaskListView>(
+            container: .main,
+            router: Router(container: .main)
+        )
+        .backgroundStyle(.gray)
     }
-
+    
 }
 
 #Preview {

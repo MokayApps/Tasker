@@ -20,7 +20,7 @@ struct TaskRow: View {
             }
             
             Text(viewModel.title)
-                .typography(type: .mediumLabel)
+                .typography(.mediumLabel)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.x2)
