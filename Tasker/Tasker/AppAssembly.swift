@@ -14,5 +14,6 @@ struct AppAssembly {
         TaskListAssembly().assemble(container: container)
         SettingsAssembly().assemble(container: container)
 		SearchAssembly().assemble(container: container)
+		NewCategoryAssembly().assemble(container: container)
 	}
 }
