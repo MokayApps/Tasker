@@ -36,6 +36,12 @@ struct TaskListView: View {
                     }
                     .buttonStyle(.secondarySmall)
                 }
+				ToolbarItem(placement: .topBarTrailing) {
+					Button(action: onNewCategoryTapped) {
+						Image(systemName: "figure.walk.circle.fill")
+					}
+					.buttonStyle(.secondarySmall)
+				}
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: onSearchTapped) {
                         Image("search")
@@ -56,4 +62,12 @@ struct TaskListView: View {
     private func onSearchTapped() {
         router.present(.search)
     }
+	
+	private func onNewCategoryTapped() {
+		router.present(.newCategory)
+	}
+}
+
+#Preview {
+	TaskListView(viewModel: TaskListViewModel())
 }
