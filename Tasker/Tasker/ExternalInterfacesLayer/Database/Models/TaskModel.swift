@@ -9,14 +9,15 @@ import Foundation
 import SwiftData
 
 @Model
-final class Task {
+public final class TaskModel {
     
-    var id: UUID
-    var name: String
-    var category: String
-    var status: String
-    var createdAt: Date
-    var dueDate: Date?
+	@Attribute(.unique)
+	public var id: UUID
+	public var name: String
+	public var category: String
+	public var status: String
+	public var createdAt: Date
+	public var dueDate: Date?
     
     init(
         id: UUID = UUID(),

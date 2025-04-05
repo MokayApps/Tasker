@@ -11,18 +11,6 @@ import MokayDI
 
 @main
 struct TaskerApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Task.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
     
     init() {
         AppAssembly().assemble(container: Container.main)
@@ -37,6 +25,5 @@ struct TaskerApp: App {
                     .black.opacity(0.5)
                 )
         }
-        .modelContainer(sharedModelContainer)
     }
 }

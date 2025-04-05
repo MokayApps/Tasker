@@ -23,5 +23,4 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .modelContainer(for: Task.self, inMemory: true)
 }

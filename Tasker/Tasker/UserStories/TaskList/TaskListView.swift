@@ -11,10 +11,8 @@ import SwiftData
 
 struct TaskListView: View {
     
-    let viewModel: TaskListViewModel
+    @State var viewModel: TaskListViewModel
     @Environment(Router.self) var router
-    @Environment(\.modelContext) private var modelContext
-    @Query private var tasks: [Task]
     
     private let gridItems: [GridItem] = [
         GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1),
@@ -22,32 +20,64 @@ struct TaskListView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: gridItems) {
-                ForEach(viewModel.tasks) { task in
-                    TaskRow(viewModel: task)
-                }
-            }
-            .padding(.x2)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: onSettingsTapped) {
-                        Image("control")
-                    }
-                    .buttonStyle(.secondarySmall)
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: onSearchTapped) {
-                        Image("search")
-                    }
-                    .buttonStyle(.secondarySmall)
-                }
-            }
+		ZStack {
+			switch viewModel.viewState {
+			case .idle:
+				Color.white.onAppear(perform: viewModel.onAppear)
+			case .loading:
+				ProgressView().progressViewStyle(.circular)
+			case .loaded(let tasks) where tasks.isEmpty:
+				emptyStateView
+			case .loaded(let tasks):
+				ScrollView {
+					LazyVGrid(columns: gridItems) {
+						ForEach(tasks) { task in
+							TaskRow(viewModel: task)
+						}
+					}
+					.padding(.x2)
+				}
+			case .error:
+				ContentUnavailableView {
+					Label("Error while loading tasks", systemImage: "network.slash")
+				} actions: {
+					Button("Reload", action: viewModel.reload)
+						.buttonStyle(.primaryMedium)
+				}
+			}
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Tasker")
+		.toolbar {
+			ToolbarItem(placement: .topBarTrailing) {
+				Button(action: onSettingsTapped) {
+					Image("control")
+				}
+				.buttonStyle(.secondarySmall)
+			}
+			ToolbarItem(placement: .topBarLeading) {
+				Button(action: onSearchTapped) {
+					Image("search")
+				}
+				.buttonStyle(.secondarySmall)
+			}
+		}
     }
-    
+	
+	private var emptyStateView: some View {
+		VStack {
+			Spacer()
+			ContentUnavailableView {
+				Label("No tasks", systemImage: "list.bullet.clipboard")
+			} actions: {
+				Button("Add task") {
+					viewModel.addTask()
+				}
+				.buttonStyle(.primaryMedium)
+			}
+			Spacer()
+		}
+	}
     
     private func onSettingsTapped() {
         router.push(.settings)

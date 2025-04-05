@@ -11,13 +11,55 @@ import SwiftUI
 @Observable
 final class TaskListViewModel {
     
-    var tasks: [TaskRowViewModel] = []
+	var viewState: TaskListViewState = .idle
+	
+	@ObservationIgnored
+	private let taskService: TaskServiceProtocol
     
-    init() {
-        tasks = [
-            TaskRowViewModel(id: UUID(), title: "Task 1", isCompleted: false),
-            TaskRowViewModel(id: UUID(), title: "Task 2", isCompleted: true),
-            TaskRowViewModel(id: UUID(), title: "Task 3", isCompleted: false)
-        ]
+	init(taskService: TaskServiceProtocol) {
+		self.taskService = taskService
     }
+	
+	func onAppear() {
+		Task {
+			await fetchTasks()
+		}
+	}
+	
+	func reload() {
+		Task {
+			await fetchTasks()
+		}
+	}
+	
+	func addTask() {
+		Task {
+			let task = TaskItem(
+				id: UUID(),
+				name: "Mock task",
+				category: "Mock task",
+				status: "Mock task",
+				createdAt: Date(),
+				dueDate: Date()
+			)
+			do {
+				try await taskService.addTask(task)
+			} catch {
+				print(error)
+			}
+		}
+	}
+	
+	private func fetchTasks() async {
+		viewState = .loading
+		do {
+			let tasks = try await taskService.fetchTasks()
+			let viewModels: [TaskRowViewModel] = tasks.map {
+				TaskRowViewModel(id: $0.id, title: $0.name, isCompleted: $0.status == "completed")
+			}
+			viewState = .loaded(viewModels)
+		} catch {
+			viewState = .error
+		}
+	}
 }
