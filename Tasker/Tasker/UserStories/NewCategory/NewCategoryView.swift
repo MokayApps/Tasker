@@ -12,12 +12,8 @@ import MCEmojiPicker
 struct NewCategoryView: View {
 	
 	@Environment(Router.self) var router
-	
-	@State private var trackerCategory: String = ""
-	@State private var emoji: String = ""
-	@State private var selectedColor: Color?
-	@State private var isPresentedEmoji: Bool = false
-	@FocusState private var isCategoryFocused: Bool
+	@StateObject private var viewModel = NewCategoryViewModel()
+	@FocusState private var isFocused: Bool
 	
 	// TODO: Поменять цвет
 	private let colors: [Color] = [.green, .yellow, .orange, .red, .pink, .purple, .blue, .teal, .gray, .brown, .cyan, .mint, .indigo, .black]
@@ -36,11 +32,11 @@ struct NewCategoryView: View {
 			
 			HStack(spacing: .x2) {
 				
-				Button(emoji) {
-					isPresentedEmoji.toggle()
+				Button(viewModel.emoji) {
+					viewModel.isPresentedEmoji.toggle()
 				}.emojiPicker(
-					isPresented: $isPresentedEmoji,
-					selectedEmoji: $emoji
+					isPresented: $viewModel.isPresentedEmoji,
+					selectedEmoji: $viewModel.emoji
 				)
 				.typography(.h3)
 				.padding(18.5)
@@ -51,9 +47,9 @@ struct NewCategoryView: View {
 						.fill(Color.black.opacity(0.04))
 				}
 				
-				InputView(text: $trackerCategory, placeholder: "Category")
+				InputView(text: $viewModel.trackerCategory, placeholder: "Category")
 					.inputViewStyle(.large)
-					.focused($isCategoryFocused)
+					.focused($isFocused)
 					.frame(maxWidth: .infinity)
 					.frame(height: 63)
 			}
@@ -63,7 +59,7 @@ struct NewCategoryView: View {
 				ForEach(colors, id: \.self) { color in
 					ZStack {
 						Circle()
-							.stroke(selectedColor == color ? color : .clear, lineWidth: 4)
+							.stroke(viewModel.selectedColor == color ? color : .clear, lineWidth: 4)
 							.frame(width: 40, height: 40)
 						
 						Circle()
@@ -74,7 +70,7 @@ struct NewCategoryView: View {
 						TapGesture()
 							.onEnded {
 								withAnimation {
-									selectedColor = color
+									viewModel.selectedColor = color
 								}
 							}
 					)
@@ -98,16 +94,16 @@ struct NewCategoryView: View {
 		}
 		.contentShape(Rectangle())
 		.onTapGesture {
-			isCategoryFocused = false
+			isFocused = false
 		}
 		.onAppear {
 			let range = 0x1F601...0x1F64F
 			let randomEmojiCodePoint = range.randomElement() ?? 0x1F60D
 			let emoji = UnicodeScalar(randomEmojiCodePoint)?.description ?? "🍑"
-			self.emoji = emoji
+			self.viewModel.emoji = emoji
 			
 			DispatchQueue.main.async {
-				self.selectedColor = colors.randomElement()
+				self.viewModel.selectedColor = colors.randomElement()
 			}
 		}
 	}

@@ -5,7 +5,6 @@
 //  Created by Andrei Kozlov on 18/1/25.
 //
 
-
 import MokayDI
 
 struct TaskListAssembly {
