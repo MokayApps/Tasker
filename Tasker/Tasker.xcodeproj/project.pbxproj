@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D1DC7D12D6B3D3200056D3E /* MCEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 4D1DC7D02D6B3D3200056D3E /* MCEmojiPicker */; };
 		4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */ = {isa = PBXBuildFile; productRef = 4D88723E2D3BC720007E0B4A /* Mokay */; };
 /* End PBXBuildFile section */
 
@@ -58,7 +57,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */,
-				4D1DC7D12D6B3D3200056D3E /* MCEmojiPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +118,6 @@
 			name = Tasker;
 			packageProductDependencies = (
 				4D88723E2D3BC720007E0B4A /* Mokay */,
-				4D1DC7D02D6B3D3200056D3E /* MCEmojiPicker */,
 			);
 			productName = Tasker;
 			productReference = 1C39E6602D29748300A12CCB /* Tasker.app */;
@@ -206,7 +203,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */,
-				4D1DC7CF2D6B3D3200056D3E /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1C39E6612D29748300A12CCB /* Products */;
@@ -411,7 +407,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tasker/Preview Content\"";
-				DEVELOPMENT_TEAM = 4GG5Y2R22P;
+				DEVELOPMENT_TEAM = AF9W25XMD8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -441,7 +437,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tasker/Preview Content\"";
-				DEVELOPMENT_TEAM = 4GG5Y2R22P;
+				DEVELOPMENT_TEAM = AF9W25XMD8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -577,14 +573,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4D1DC7CF2D6B3D3200056D3E /* XCRemoteSwiftPackageReference "MCEmojiPicker" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/izyumkin/MCEmojiPicker";
-			requirement = {
-				kind = exactVersion;
-				version = 1.2.3;
-			};
-		};
 		4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MokayApps/Mokay.git";
@@ -596,11 +584,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4D1DC7D02D6B3D3200056D3E /* MCEmojiPicker */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D1DC7CF2D6B3D3200056D3E /* XCRemoteSwiftPackageReference "MCEmojiPicker" */;
-			productName = MCEmojiPicker;
-		};
 		4D88723E2D3BC720007E0B4A /* Mokay */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */;
