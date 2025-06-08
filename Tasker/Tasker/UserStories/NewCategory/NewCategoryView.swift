@@ -9,6 +9,7 @@ import SwiftUI
 import MokayUI
 
 struct NewCategoryView: View {
+	@Environment(\.dismiss) var dismiss
 	@Environment(Router.self) var router
 	@StateObject private var viewModel = NewCategoryViewModel()
 	@FocusState private var isFocused: Bool
@@ -108,7 +109,7 @@ struct NewCategoryView: View {
 				Spacer()
 				
 				Button {
-					router.dismiss()
+					dismiss()
 				} label: {
 					Image(.close)
 						.padding(8)
