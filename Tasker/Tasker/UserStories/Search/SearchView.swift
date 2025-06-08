@@ -192,25 +192,23 @@ extension SearchView {
 				Text(category.title)
 					.typography(.smallLabel)
 				
-				if isSelected {
-					Button {
-						withAnimation(.easeInOut(duration: 0.25)) {
-							viewModel.selectedCategory = nil
-						}
-					} label: {
-						Image(systemName: "xmark")
-							.typography(.subhead)
-							.foregroundStyle(Color.accent.textSecondary)
+				Button {
+					withAnimation(.easeInOut(duration: 0.25)) {
+						viewModel.selectedCategory = nil
 					}
-					.scaleEffect(isSelected ? 1 : 0.5)
-					.opacity(isSelected ? 1 : 0)
-					.frame(width: isSelected ? nil : 0)
-					.animation(.easeInOut(duration: 0.25), value: isSelected)
+				} label: {
+					Image(systemName: "xmark")
+						.typography(.subhead)
+						.foregroundStyle(Color.accent.textSecondary)
 				}
+				.scaleEffect(isSelected ? 1 : 0.5)
+				.opacity(isSelected ? 1 : 0)
+				.frame(width: isSelected ? nil : 0) // можно убрать если не критично
+				.animation(.easeInOut(duration: 0.25), value: isSelected)
 			}
 		}
 		.buttonStyle(.secondarySmall)
-		.backgroundStyle(category.id == viewModel.selectedCategory?.id ? category.color.opacity(0.5) : Color.accent.bgSecondary)
+		.backgroundStyle(isSelected ? category.color.opacity(0.5) : Color.accent.bgSecondary)
 	}
 }
 
