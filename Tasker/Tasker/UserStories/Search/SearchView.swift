@@ -20,6 +20,7 @@ struct SearchView: View {
 	var body: some View {
 		VStack(spacing: .x1) {
 			headerView
+			categoriesView
 			
 			switch viewModel.viewState {
 			case .empty:
@@ -32,6 +33,7 @@ struct SearchView: View {
 		}
 		.onAppear {
 			isSearchFieldFocused = true
+			viewModel.onAppear()
 		}
 	}
 }
@@ -40,7 +42,6 @@ extension SearchView {
 	private var headerView: some View {
 		VStack(spacing: .x1) {
 			searchView
-			categoriesView
 		}
 	}
 	
@@ -191,22 +192,25 @@ extension SearchView {
 				Text(category.title)
 					.typography(.smallLabel)
 				
-				Button {
-					withAnimation(.easeInOut(duration: 0.25)) {
-						viewModel.selectedCategory = nil
+				if isSelected {
+					Button {
+						withAnimation(.easeInOut(duration: 0.25)) {
+							viewModel.selectedCategory = nil
+						}
+					} label: {
+						Image(systemName: "xmark")
+							.typography(.subhead)
+							.foregroundStyle(Color.accent.textSecondary)
 					}
-				} label: {
-					Image(systemName: "xmark")
-						.typography(.subhead)
-						.foregroundStyle(Color.accent.textSecondary)
+					.scaleEffect(isSelected ? 1 : 0.5)
+					.opacity(isSelected ? 1 : 0)
+					.frame(width: isSelected ? nil : 0)
+					.animation(.easeInOut(duration: 0.25), value: isSelected)
 				}
-				.scaleEffect(isSelected ? 1 : 0.5)
-				.opacity(isSelected ? 1 : 0)
-				.frame(width: isSelected ? nil : 0)
-				.animation(.easeInOut(duration: 0.25), value: isSelected)
 			}
 		}
 		.buttonStyle(.secondarySmall)
 		.backgroundStyle(category.id == viewModel.selectedCategory?.id ? category.color.opacity(0.5) : Color.accent.bgSecondary)
 	}
 }
+

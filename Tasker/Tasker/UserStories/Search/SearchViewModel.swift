@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 
 struct SearchTaskCategoryViewModel: Hashable, Identifiable {
-	let id: String = UUID().uuidString
+	let id: UUID
 	var icon: String
 	var title: String
-	var color: Color = .blue
+	var color: Color
 }
 
 struct SearchSection: Identifiable {
@@ -34,26 +34,44 @@ final class SearchViewModel: ObservableObject {
 		didSet { updateViewState() }
 	}
 	
-	private let allTasks: [String]
-	let categories: [SearchTaskCategoryViewModel]
-	
+	private let taskService: TaskServiceProtocol
 	@Published var selectedCategory: SearchTaskCategoryViewModel?
 	@Published var viewState: ViewState = .empty
+	@Published var categories: [SearchTaskCategoryViewModel] = []
 	
-	init() {
-		categories = [
-			SearchTaskCategoryViewModel(icon: "🏠", title: "Home", color: .red),
-			SearchTaskCategoryViewModel(icon: "🏥", title: "Health", color: .yellow),
-			SearchTaskCategoryViewModel(icon: "🛍️", title: "Shopping", color: .orange),
-			SearchTaskCategoryViewModel(icon: "🗂️", title: "Work", color: .teal),
-			SearchTaskCategoryViewModel(icon: "⚽️", title: "Sport", color: .pink),
-		]
-		
-		allTasks = [
-			"Buy groceries", "Workout", "Meeting with team", "Dentist appointment", "Call mom",
-			"Finish project", "Read book", "Plan vacation", "Pay bills", "Learn Swift",
-			"Write article", "Go to the gym", "Buy new laptop", "Cook dinner", "Walk the dog"
-		]
+	init(taskService: TaskServiceProtocol) {
+		self.taskService = taskService
+	}
+	
+	func onAppear() {
+		Task {
+			await fetchCategories()
+			subscribeOnCategoryChanges()
+		}
+	}
+	
+	func subscribeOnCategoryChanges() {
+		Task {
+			for await _ in await taskService.taskUpdatesStream() {
+				await fetchCategories()
+			}
+		}
+	}
+	
+	func fetchCategories() async {
+		do {
+			let dbCategories = try await taskService.fetchCategories()
+			categories = dbCategories.map { category in
+				SearchTaskCategoryViewModel(
+					id: category.id,
+					icon: category.icon,
+					title: category.name,
+					color: Color(hex: category.color) ?? .blue
+				)
+			}
+		} catch {
+			print(error)
+		}
 	}
 	
 	var queryStringBinding: Binding<String> {
@@ -69,10 +87,26 @@ final class SearchViewModel: ObservableObject {
 			return
 		}
 		
-		let filteredTasks = allTasks.filter { $0.localizedCaseInsensitiveContains(searchText) }
-		
-		viewState = filteredTasks.isEmpty
-		? .error
-		: .result(sections: filteredTasks.map { SearchSection(title: "Task: \($0)", items: [$0]) })
+		Task {
+			do {
+				let tasks = try await taskService.fetchTasks()
+				let filteredTasks = tasks.filter { task in
+					let matchesSearch = task.name.localizedCaseInsensitiveContains(searchText)
+					let matchesCategory = selectedCategory == nil || task.category == selectedCategory?.title
+					return matchesSearch && matchesCategory
+				}
+				
+				if filteredTasks.isEmpty {
+					viewState = .error
+				} else {
+					let sections = filteredTasks.map { task in
+						SearchSection(title: "Task: \(task.name)", items: [task.name])
+					}
+					viewState = .result(sections: sections)
+				}
+			} catch {
+				viewState = .error
+			}
+		}
 	}
 }
