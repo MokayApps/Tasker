@@ -11,5 +11,6 @@ enum Screen: Int, Hashable, Identifiable {
     
     case taskList
     case settings
+		case newTask
     case search
 }

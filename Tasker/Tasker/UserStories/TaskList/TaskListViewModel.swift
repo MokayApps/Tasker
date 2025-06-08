@@ -9,12 +9,10 @@ import SwiftUI
 import Combine
 
 @MainActor
-@Observable
-final class TaskListViewModel {
+final class TaskListViewModel: ObservableObject {
+    
+	@Published var viewState: TaskListViewState = .idle
 	
-	var viewState: TaskListViewState = .idle
-	
-	@ObservationIgnored
 	private let taskService: TaskServiceProtocol
 	
 	private var subscriptions: Set<AnyCancellable> = []

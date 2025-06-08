@@ -28,9 +28,11 @@ final class Router: Sendable {
             container.resolve(TaskListView.self)
         case .settings:
             container.resolve(SettingsView.self)
+				case .newTask:
+					container.resolve(NewTaskView.self)
         case .search:
-            container.resolve(SearchView.self)
-        }
+					container.resolve(SearchView.self)
+				}
     }
     
     @ViewBuilder func routerView(for screen: Screen) -> some View {
@@ -39,6 +41,8 @@ final class Router: Sendable {
             container.resolve(TaskListView.self)
         case .settings:
             container.resolve(SettingsView.self)
+				case .newTask:
+						RouterView<NewTaskView>(container: container, router: Router(container: container))
         case .search:
             RouterView<SearchView>(container: container, router: Router(container: container))
         }

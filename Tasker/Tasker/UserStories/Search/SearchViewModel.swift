@@ -22,8 +22,7 @@ struct SearchSection: Identifiable {
 }
 
 @MainActor
-@Observable
-final class SearchViewModel {
+final class SearchViewModel: ObservableObject {
 	
 	enum ViewState {
 		case empty
@@ -31,16 +30,15 @@ final class SearchViewModel {
 		case error
 	}
 	
-	let categories: [TaskCategory]
-	var selectedCategory: TaskCategory?
-	
 	var searchText: String = "" {
 		didSet { updateViewState() }
 	}
 	
-	var viewState: ViewState = .empty
-	
 	private let allTasks: [String]
+	let categories: [TaskCategory]
+	
+	@Published var selectedCategory: TaskCategory?
+	@Published var viewState: ViewState = .empty
 	
 	init() {
 		categories = [
