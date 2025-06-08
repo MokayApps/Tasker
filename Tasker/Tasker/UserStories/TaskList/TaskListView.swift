@@ -8,18 +8,20 @@
 import MokayUI
 import SwiftUI
 import SwiftData
+import MokayDI
 
 struct TaskListView: View {
-    
-    @State var viewModel: TaskListViewModel
-    @Environment(Router.self) var router
-    
-    private let gridItems: [GridItem] = [
-        GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1),
-        GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1)
-    ]
-    
-    var body: some View {
+	
+	@StateObject var viewModel: TaskListViewModel
+	
+	@Environment(Router.self) var router
+	
+	private let gridItems: [GridItem] = [
+		GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1),
+		GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1)
+	]
+	
+	var body: some View {
 		ZStack {
 			switch viewModel.viewState {
 			case .idle:
@@ -45,9 +47,9 @@ struct TaskListView: View {
 						.buttonStyle(.primaryMedium)
 				}
 			}
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Tasker")
+		}
+		.navigationBarTitleDisplayMode(.inline)
+		.navigationTitle("Tasker")
 		.toolbar {
 			ToolbarItem(placement: .topBarTrailing) {
 				Button(action: onSettingsTapped) {
@@ -62,28 +64,31 @@ struct TaskListView: View {
 				.buttonStyle(.secondarySmall)
 			}
 		}
-    }
+	}
 	
 	private var emptyStateView: some View {
 		VStack {
 			Spacer()
-			ContentUnavailableView {
-				Label("No tasks", systemImage: "list.bullet.clipboard")
-			} actions: {
-				Button("Add task") {
-					viewModel.addTask()
+			ErrorStateView(
+				icon: Image(systemName: "list.bullet.clipboard"),
+				title: "No tasks",
+				subtitle: nil,
+				button: {
+					Button("Add task") {
+						router.present(.newTask)
+					}
+					.buttonStyle(.primaryMedium)
 				}
-				.buttonStyle(.primaryMedium)
-			}
+			)
 			Spacer()
 		}
 	}
-    
-    private func onSettingsTapped() {
-        router.push(.settings)
-    }
-
-    private func onSearchTapped() {
-        router.present(.search)
-    }
+	
+	private func onSettingsTapped() {
+		router.push(.settings)
+	}
+	
+	private func onSearchTapped() {
+		router.present(.search)
+	}
 }

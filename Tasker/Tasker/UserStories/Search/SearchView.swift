@@ -13,7 +13,7 @@ struct SearchView: View {
 	@Environment(Router.self) var router
 	@Environment(\.dismiss) private var dismiss
 	
-	let viewModel: SearchViewModel
+	@StateObject var viewModel: SearchViewModel
 	
 	@FocusState private var isSearchFieldFocused: Bool
 	
@@ -69,7 +69,7 @@ extension SearchView {
 				title: "No tasks found. Create a new one?",
 				button: {
 					Button {
-						
+						router.present(.newTask)
 					} label: {
 						HStack(spacing: .x1) {
 							Image(systemName: "plus.circle.fill")
@@ -180,23 +180,30 @@ extension SearchView {
 	}
 	
 	private func categoryItemView(_ category: TaskCategory) -> some View {
-		Button {
-			viewModel.selectedCategory = category
+		let isSelected = category.id == viewModel.selectedCategory?.id
+		return Button {
+			withAnimation(.easeInOut(duration: 0.25)) {
+				viewModel.selectedCategory = category
+			}
 		} label: {
 			HStack(spacing: .x1) {
 				Text(category.icon)
 				Text(category.title)
 					.typography(.smallLabel)
 				
-				if category.id == viewModel.selectedCategory?.id {
-					Button {
+				Button {
+					withAnimation(.easeInOut(duration: 0.25)) {
 						viewModel.selectedCategory = nil
-					} label: {
-						Image(systemName: "xmark")
-							.typography(.subhead)
-							.foregroundStyle(Color.accent.textSecondary)
 					}
+				} label: {
+					Image(systemName: "xmark")
+						.typography(.subhead)
+						.foregroundStyle(Color.accent.textSecondary)
 				}
+				.scaleEffect(isSelected ? 1 : 0.5)
+				.opacity(isSelected ? 1 : 0)
+				.frame(width: isSelected ? nil : 0)
+				.animation(.easeInOut(duration: 0.25), value: isSelected)
 			}
 		}
 		.buttonStyle(.secondarySmall)

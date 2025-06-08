@@ -8,17 +8,15 @@
 import SwiftUI
 
 @MainActor
-@Observable
-final class TaskListViewModel {
+final class TaskListViewModel: ObservableObject {
     
-	var viewState: TaskListViewState = .idle
+	@Published var viewState: TaskListViewState = .idle
 	
-	@ObservationIgnored
 	private let taskService: TaskServiceProtocol
     
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
-    }
+	}
 	
 	func onAppear() {
 		Task {

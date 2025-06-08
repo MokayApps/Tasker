@@ -11,8 +11,9 @@ import MokayDI
 struct AppAssembly {
 	
 	func assemble(container: Container) {
-        TaskListAssembly().assemble(container: container)
-        SettingsAssembly().assemble(container: container)
+		TaskListAssembly().assemble(container: container)
+		SettingsAssembly().assemble(container: container)
+		NewTaskAssembly().assemble(container: container)
 		SearchAssembly().assemble(container: container)
 		TaskServiceAssembly().assemble(container: container)
 		ModelContainerAssembly().assemble(container: container)

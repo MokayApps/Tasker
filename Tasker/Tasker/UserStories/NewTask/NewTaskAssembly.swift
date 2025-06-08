@@ -1,21 +1,20 @@
 //
-//  TodoListAssembly.swift
+//  NewTaskAssembly.swift
 //  Tasker
 //
-//  Created by Andrei Kozlov on 18/1/25.
+//  Created by Єгор Привалов on 10.04.2025.
 //
-
 
 import MokayDI
 
-struct TaskListAssembly {
+struct NewTaskAssembly {
 	
 	func assemble(container: Container) {
-		container.register(TaskListView.self) { resolver in
+		container.register(NewTaskView.self) { resolver in
 			MainActor.assumeIsolated {
 				let taskService = resolver.resolve(TaskServiceProtocol.self)!
-				return TaskListView(
-					viewModel: TaskListViewModel(
+				return NewTaskView(
+					viewModel: NewTaskViewModel(
 						taskService: taskService
 					)
 				)
