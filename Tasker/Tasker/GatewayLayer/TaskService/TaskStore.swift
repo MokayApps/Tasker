@@ -5,10 +5,12 @@
 //  Created by Andrei Kozlov on 05.04.2025.
 //
 
+import Foundation
 import SwiftData
 
 protocol TaskStoreProtocol: Actor {
 	
+	func taskUpdatesStream() -> NotificationCenter.Notifications
 	func addTask(_ task: TaskItem) throws
 	func fetchTasks() async throws -> [TaskItem]
 	func deleteTask(_ task: TaskItem) throws
@@ -61,5 +63,12 @@ actor TaskStore: TaskStoreProtocol {
 		)
 		modelContext.delete(taskModel)
 		try modelContext.save()
+	}
+	
+	func taskUpdatesStream() -> NotificationCenter.Notifications {
+		return NotificationCenter.default.notifications(
+			named: ModelContext.didSave,
+			object: nil
+		)
 	}
 }

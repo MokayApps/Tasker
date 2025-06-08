@@ -6,23 +6,35 @@
 //
 
 import SwiftUI
+import Combine
 
 @MainActor
 @Observable
 final class TaskListViewModel {
-    
+	
 	var viewState: TaskListViewState = .idle
 	
 	@ObservationIgnored
 	private let taskService: TaskServiceProtocol
-    
+	
+	private var subscriptions: Set<AnyCancellable> = []
+	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
-    }
+	}
 	
 	func onAppear() {
 		Task {
 			await fetchTasks()
+			subscribeOnTaskChanges()
+		}
+	}
+	
+	func subscribeOnTaskChanges() {
+		Task {
+			for await _ in await taskService.taskUpdatesStream() {
+				await fetchTasks()
+			}
 		}
 	}
 	

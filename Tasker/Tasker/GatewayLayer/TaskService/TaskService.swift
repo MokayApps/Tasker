@@ -8,6 +8,7 @@
 import Foundation
 import MokayDB
 import SwiftData
+@preconcurrency import Combine
 
 final class TaskService: TaskServiceProtocol {
 	
@@ -15,6 +16,10 @@ final class TaskService: TaskServiceProtocol {
 	
 	init(store: TaskStoreProtocol) {
 		self.store = store
+	}
+	
+	func taskUpdatesStream() async -> NotificationCenter.Notifications {
+		return await store.taskUpdatesStream()
 	}
 	
 	func addTask(_ task: TaskItem) async throws {
