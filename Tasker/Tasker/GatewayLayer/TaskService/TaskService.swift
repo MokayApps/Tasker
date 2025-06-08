@@ -34,5 +34,17 @@ final class TaskService: TaskServiceProtocol {
 		try await store.deleteTask(task)
 	}
 	
+	// Category methods
+	func addCategory(_ category: TaskCategory) async throws {
+		try await store.addCategory(category)
+	}
+	
+	func fetchCategories() async throws -> [TaskCategory] {
+		return try await store.fetchCategories()
+	}
+	
+	func deleteCategory(_ category: TaskCategory) async throws {
+		try await store.deleteCategory(category)
+	}
 }
 

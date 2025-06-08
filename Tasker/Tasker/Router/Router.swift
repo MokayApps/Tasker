@@ -32,6 +32,8 @@ final class Router: Sendable {
 					container.resolve(NewTaskView.self)
         case .search:
 					container.resolve(SearchView.self)
+        case .categories:
+            container.resolve(CategoriesView.self)
 				}
     }
     
@@ -45,6 +47,8 @@ final class Router: Sendable {
 						RouterView<NewTaskView>(container: container, router: Router(container: container))
         case .search:
             RouterView<SearchView>(container: container, router: Router(container: container))
+        case .categories:
+            RouterView<CategoriesView>(container: container, router: Router(container: container))
         }
     }
     

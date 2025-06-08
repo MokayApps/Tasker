@@ -179,7 +179,7 @@ extension SearchView {
 		}
 	}
 	
-	private func categoryItemView(_ category: TaskCategory) -> some View {
+	private func categoryItemView(_ category: SearchTaskCategoryViewModel) -> some View {
 		let isSelected = category.id == viewModel.selectedCategory?.id
 		return Button {
 			withAnimation(.easeInOut(duration: 0.25)) {

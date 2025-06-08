@@ -13,6 +13,6 @@ enum DatabaseSchemaV1_0_0: VersionedSchema {
 	}
 	
 	static var models: [any PersistentModel.Type] {
-		[TaskModel.self]
+		[TaskModel.self, TaskCategoryModel.self]
 	}
 }

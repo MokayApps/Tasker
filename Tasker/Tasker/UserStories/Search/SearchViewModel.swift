@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct TaskCategory: Hashable, Identifiable {
+struct SearchTaskCategoryViewModel: Hashable, Identifiable {
 	let id: String = UUID().uuidString
 	var icon: String
 	var title: String
@@ -35,18 +35,18 @@ final class SearchViewModel: ObservableObject {
 	}
 	
 	private let allTasks: [String]
-	let categories: [TaskCategory]
+	let categories: [SearchTaskCategoryViewModel]
 	
-	@Published var selectedCategory: TaskCategory?
+	@Published var selectedCategory: SearchTaskCategoryViewModel?
 	@Published var viewState: ViewState = .empty
 	
 	init() {
 		categories = [
-			TaskCategory(icon: "🏠", title: "Home", color: .red),
-			TaskCategory(icon: "🏥", title: "Health", color: .yellow),
-			TaskCategory(icon: "🛍️", title: "Shopping", color: .orange),
-			TaskCategory(icon: "🗂️", title: "Work", color: .teal),
-			TaskCategory(icon: "⚽️", title: "Sport", color: .pink),
+			SearchTaskCategoryViewModel(icon: "🏠", title: "Home", color: .red),
+			SearchTaskCategoryViewModel(icon: "🏥", title: "Health", color: .yellow),
+			SearchTaskCategoryViewModel(icon: "🛍️", title: "Shopping", color: .orange),
+			SearchTaskCategoryViewModel(icon: "🗂️", title: "Work", color: .teal),
+			SearchTaskCategoryViewModel(icon: "⚽️", title: "Sport", color: .pink),
 		]
 		
 		allTasks = [

@@ -14,6 +14,11 @@ protocol TaskStoreProtocol: Actor {
 	func addTask(_ task: TaskItem) throws
 	func fetchTasks() async throws -> [TaskItem]
 	func deleteTask(_ task: TaskItem) throws
+	
+	// Category methods
+	func addCategory(_ category: TaskCategory) throws
+	func fetchCategories() async throws -> [TaskCategory]
+	func deleteCategory(_ category: TaskCategory) throws
 }
 
 @ModelActor
@@ -70,5 +75,44 @@ actor TaskStore: TaskStoreProtocol {
 			named: ModelContext.didSave,
 			object: nil
 		)
+	}
+	
+	// Category methods
+	func addCategory(_ category: TaskCategory) throws {
+		let categoryModel = TaskCategoryModel(
+			id: category.id,
+			name: category.name,
+			icon: category.icon,
+			color: category.color,
+			createdAt: category.createdAt
+		)
+		modelContext.insert(categoryModel)
+		try modelContext.save()
+	}
+	
+	func fetchCategories() throws -> [TaskCategory] {
+		let fetchDescriptor = FetchDescriptor<TaskCategoryModel>()
+		let categories = try modelContext.fetch(fetchDescriptor)
+		return categories.map {
+			TaskCategory(
+				id: $0.id,
+				name: $0.name,
+				icon: $0.icon,
+				color: $0.color,
+				createdAt: $0.createdAt
+			)
+		}
+	}
+	
+	func deleteCategory(_ category: TaskCategory) throws {
+		let categoryModel = TaskCategoryModel(
+			id: category.id,
+			name: category.name,
+			icon: category.icon,
+			color: category.color,
+			createdAt: category.createdAt
+		)
+		modelContext.delete(categoryModel)
+		try modelContext.save()
 	}
 }

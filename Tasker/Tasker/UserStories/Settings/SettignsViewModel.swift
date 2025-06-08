@@ -64,13 +64,9 @@ final class SettingsViewModel {
     private func setupBindings() {
         rowTappedSubject
             .sink { [weak self] type in
-                self?.handleRowTap(type)
+                // Handle other row taps if needed
             }
             .store(in: &cancellables)
-    }
-    
-    private func handleRowTap(_ type: SettingsRowType) {
-        
     }
     
 }

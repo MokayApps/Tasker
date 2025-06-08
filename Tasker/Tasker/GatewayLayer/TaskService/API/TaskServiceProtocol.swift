@@ -14,4 +14,9 @@ public protocol TaskServiceProtocol: AnyObject, Sendable {
 	func addTask(_ task: TaskItem) async throws
 	func fetchTasks() async throws -> [TaskItem]
 	func deleteTask(_ task: TaskItem) async throws
+	
+	// Category methods
+	func addCategory(_ category: TaskCategory) async throws
+	func fetchCategories() async throws -> [TaskCategory]
+	func deleteCategory(_ category: TaskCategory) async throws
 }
