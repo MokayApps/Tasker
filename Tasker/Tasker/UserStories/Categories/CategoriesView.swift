@@ -2,8 +2,8 @@ import SwiftUI
 import MokayUI
 
 struct CategoriesView: View {
+	@Environment(Router.self) private var router
     @StateObject var viewModel: CategoriesViewModel
-    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
@@ -35,12 +35,16 @@ struct CategoriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Categories")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: onAddTapped) {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+					router.present(.newCategory)
+                } label: {
                     Image(systemName: "plus")
                 }
-                .buttonStyle(.secondarySmall)
             }
+        }
+        .task {
+            await viewModel.fetchCategories()
         }
     }
     
@@ -53,17 +57,13 @@ struct CategoriesView: View {
                 subtitle: "Add your first category to organize tasks",
                 button: {
                     Button("Add category") {
-                        onAddTapped()
+						router.present(.newCategory)
                     }
                     .buttonStyle(.primaryMedium)
                 }
             )
             Spacer()
         }
-    }
-    
-    private func onAddTapped() {
-        // TODO: Show add category sheet
     }
 }
 

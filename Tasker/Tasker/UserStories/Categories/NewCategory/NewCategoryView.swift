@@ -11,7 +11,7 @@ import MokayUI
 struct NewCategoryView: View {
 	@Environment(\.dismiss) var dismiss
 	@Environment(Router.self) var router
-	@StateObject private var viewModel = NewCategoryViewModel()
+	@StateObject var viewModel: NewCategoryViewModel
 	@FocusState private var isFocused: Bool
 	
 	private let colors: [Color] = [.green, .yellow, .orange, .red, .pink, .purple, .blue, .teal, .gray, .brown, .cyan, .mint, .indigo, .black]
@@ -88,7 +88,7 @@ struct NewCategoryView: View {
 				}
 			}
 			
-			shareButton()
+			saveButton()
 				.frame(height: 56)
 				.background {
 					RoundedRectangle(cornerRadius: 17)
@@ -124,9 +124,10 @@ struct NewCategoryView: View {
 	}
 	
 	@ViewBuilder
-	private func shareButton() -> some View {
+	private func saveButton() -> some View {
 		Button {
-			print("Save")
+			viewModel.addCategory()
+			dismiss()
 		} label: {
 			HStack {
 				Text("Save")
@@ -143,10 +144,10 @@ struct NewCategoryView: View {
 	}
 }
 
-#Preview {
-	NewCategoryView()
-		.environment(Router(container: .main))
-}
+//#Preview {
+//	NewCategoryView()
+//		.environment(Router(container: .main))
+//}
 
 
 fileprivate struct CustomKeyboardTextfield: UIViewRepresentable {

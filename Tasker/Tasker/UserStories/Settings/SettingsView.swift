@@ -28,6 +28,7 @@ struct SettingsView: View {
                 VStack(spacing: .zero) {
                     ForEach(section.rows) { row in
                         SettingsRow(viewModel: row)
+							.contentShape(Rectangle())
                             .onTapGesture {
                                 if row.type == .categories {
                                     router.push(.categories)

@@ -28,12 +28,21 @@ final class CategoriesViewModel: ObservableObject {
     func onAppear() {
         Task {
             await fetchCategories()
+            subscribeOnCategoryChanges()
         }
     }
     
     func reload() {
         Task {
             await fetchCategories()
+        }
+    }
+    
+    func subscribeOnCategoryChanges() {
+        Task {
+			for await _ in await taskService.taskUpdatesStream() {
+                await fetchCategories()
+            }
         }
     }
     
@@ -48,14 +57,13 @@ final class CategoriesViewModel: ObservableObject {
             )
             do {
                 try await taskService.addCategory(category)
-                await fetchCategories()
             } catch {
                 print(error)
             }
         }
     }
     
-    private func fetchCategories() async {
+    func fetchCategories() async {
         viewState = .loading
         do {
             let categories = try await taskService.fetchCategories()
