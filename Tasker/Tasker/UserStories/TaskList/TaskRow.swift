@@ -10,14 +10,12 @@ import SwiftUI
 
 struct TaskRow: View {
     
-    let viewModel: TaskRowViewModel
+    @StateObject var viewModel: TaskRowViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: .x1) {
-            Button(action: onCheckboxTapped) {
-                Image(systemName: viewModel.isCompleted ? "checkmark.square.fill" : "square")
-                    .frame(width: 24, height: 24)
-            }
+            Image(systemName: viewModel.isCompleted ? "checkmark.square.fill" : "square")
+                .frame(width: 24, height: 24)
             
             Text(viewModel.title)
                 .typography(.mediumLabel)
@@ -33,9 +31,8 @@ struct TaskRow: View {
                     .fill(Color.red.opacity(0.3))
             }
         }
-    }
-    
-    private func onCheckboxTapped() {
-        
+        .onTapGesture {
+            viewModel.toggleCompletion()
+        }
     }
 }

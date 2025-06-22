@@ -31,8 +31,25 @@ final class TaskListViewModel: ObservableObject {
 	func subscribeOnTaskChanges() {
 		Task {
 			for await _ in await taskService.taskUpdatesStream() {
+				await checkForTaskCountChanges()
+			}
+		}
+	}
+	
+	private func checkForTaskCountChanges() async {
+		guard case .loaded(let currentTasks) = viewState else {
+			await fetchTasks()
+			return
+		}
+		
+		do {
+			let tasks = try await taskService.fetchTasks()
+			
+			if tasks.count != currentTasks.count {
 				await fetchTasks()
 			}
+		} catch {
+			print("Error checking task count: \(error)")
 		}
 	}
 	
@@ -65,7 +82,16 @@ final class TaskListViewModel: ObservableObject {
 		do {
 			let tasks = try await taskService.fetchTasks()
 			let viewModels: [TaskRowViewModel] = tasks.map {
-				TaskRowViewModel(id: $0.id, title: $0.name, isCompleted: $0.status == "completed")
+				TaskRowViewModel(
+					id: $0.id,
+					title: $0.name,
+					isCompleted: $0.status == "completed",
+					category: $0.category,
+					status: $0.status,
+					createdAt: $0.createdAt,
+					dueDate: $0.dueDate,
+					taskService: taskService
+				)
 			}
 			viewState = .loaded(viewModels)
 		} catch {
