@@ -8,10 +8,13 @@
 import SwiftUI
 import MokayUI
 
+extension Notification.Name {
+	static let searchViewDidClose = Notification.Name("searchViewDidClose")
+}
+
 struct SearchView: View {
 	
 	@Environment(Router.self) var router
-	@Environment(\.dismiss) private var dismiss
 	
 	@StateObject var viewModel: SearchViewModel
 	
@@ -164,7 +167,7 @@ extension SearchView {
 	private var cancelButton: some View {
 		Button {
 			if viewModel.searchText.isEmpty {
-				dismiss()
+				NotificationCenter.default.post(name: .searchViewDidClose, object: nil)
 			} else {
 				viewModel.queryStringBinding.wrappedValue = ""
 			}
