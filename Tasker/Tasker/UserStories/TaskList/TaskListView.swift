@@ -139,6 +139,7 @@ extension TaskListView {
 		.contentShape(Rectangle())
 		.onTapGesture {
 			isExpanded = true
+			NotificationCenter.default.post(name: .searchViewDidOpen, object: nil)
 		}
 	}
 	
@@ -186,7 +187,6 @@ extension TaskListView {
 		.background(in: RoundedRectangle(cornerRadius: 24))
 		.backgroundStyle(Color.accent.textPrimaryGreen)
 	}
-
 	
 	private var overlayView: some View {
 		Rectangle()
@@ -204,6 +204,7 @@ extension TaskListView {
 			DispatchQueue.main.async {
 				if offsetY > 100 || (dy > 1.5 && offsetY > 0) {
 					isExpanded = true
+					NotificationCenter.default.post(name: .searchViewDidOpen, object: nil)
 				}
 			}
 		}

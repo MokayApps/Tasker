@@ -9,6 +9,7 @@ import SwiftUI
 import MokayUI
 
 extension Notification.Name {
+	static let searchViewDidOpen = Notification.Name("searchViewDidOpen")
 	static let searchViewDidClose = Notification.Name("searchViewDidClose")
 }
 
@@ -19,6 +20,7 @@ struct SearchView: View {
 	@StateObject var viewModel: SearchViewModel
 	
 	@FocusState private var isSearchFieldFocused: Bool
+	@State private var shouldFocus: Bool = false
 	
 	var body: some View {
 		VStack(spacing: .x1) {
@@ -35,8 +37,15 @@ struct SearchView: View {
 			}
 		}
 		.onAppear {
-			isSearchFieldFocused = true
 			viewModel.onAppear()
+		}
+		.onReceive(NotificationCenter.default.publisher(for: .searchViewDidOpen)) { _ in
+			shouldFocus = true
+			isSearchFieldFocused = true
+		}
+		.onReceive(NotificationCenter.default.publisher(for: .searchViewDidClose)) { _ in
+			shouldFocus = false
+			isSearchFieldFocused = false
 		}
 	}
 }
@@ -168,6 +177,7 @@ extension SearchView {
 		Button {
 			if viewModel.searchText.isEmpty {
 				NotificationCenter.default.post(name: .searchViewDidClose, object: nil)
+				isSearchFieldFocused = false
 			} else {
 				viewModel.queryStringBinding.wrappedValue = ""
 			}
