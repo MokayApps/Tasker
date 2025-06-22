@@ -13,6 +13,7 @@ struct ColorCodes {
 	static let bgSecondary: UInt = 0xF2F2F2
 	static let secondaryTransparent: UInt = 0x000000
 	static let textSecondary: UInt = 0x999999
+	static let textPrimaryGreen: UInt = 0x23A947
 }
 
 extension Color {
@@ -27,5 +28,6 @@ extension Color {
 		let bgSecondary = Color(light: Color(ColorCodes.bgSecondary), dark: Color(ColorCodes.bgSecondary))
 		let secondaryTransparent = Color(light: Color(ColorCodes.secondaryTransparent).opacity(0.35), dark: Color(ColorCodes.secondaryTransparent).opacity(0.35))
 		let textSecondary = Color(light: Color(ColorCodes.textSecondary), dark: Color(ColorCodes.textSecondary))
+		let textPrimaryGreen = Color(light: Color(ColorCodes.textPrimaryGreen), dark: Color(ColorCodes.textPrimaryGreen))
 	}
 }

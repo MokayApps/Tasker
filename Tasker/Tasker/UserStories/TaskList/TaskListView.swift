@@ -31,13 +31,17 @@ struct TaskListView: View {
 			case .loaded(let tasks) where tasks.isEmpty:
 				emptyStateView
 			case .loaded(let tasks):
-				ScrollView {
-					LazyVGrid(columns: gridItems) {
-						ForEach(tasks) { task in
-							TaskRow(viewModel: task)
+				ZStack(alignment: .bottomTrailing) {
+					ScrollView {
+						LazyVGrid(columns: gridItems) {
+							ForEach(tasks) { task in
+								TaskRow(viewModel: task)
+							}
 						}
+						.padding(.x2)
 					}
-					.padding(.x2)
+					addTaskButton
+						.offset(x: -.x3)
 				}
 			case .error:
 				ContentUnavailableView {
@@ -74,14 +78,23 @@ struct TaskListView: View {
 				title: "No tasks",
 				subtitle: nil,
 				button: {
-					Button("Add task") {
-						router.present(.newTask)
-					}
-					.buttonStyle(.primaryMedium)
+					Button("Add task", action: onAddTaskTapped)
+						.buttonStyle(.primaryMedium)
 				}
 			)
 			Spacer()
 		}
+	}
+	
+	private var addTaskButton: some View {
+		Button(action: onAddTaskTapped) {
+			Image("add")
+				.renderingMode(.template)
+				.foregroundStyle(Color.white)
+		}
+		.padding(24)
+		.background(in: RoundedRectangle(cornerRadius: 24))
+		.backgroundStyle(Color.accent.textPrimaryGreen)
 	}
 	
 	private func onSettingsTapped() {
@@ -90,5 +103,9 @@ struct TaskListView: View {
 	
 	private func onSearchTapped() {
 		router.present(.search)
+	}
+	
+	private func onAddTaskTapped() {
+		router.present(.newTask)
 	}
 }
