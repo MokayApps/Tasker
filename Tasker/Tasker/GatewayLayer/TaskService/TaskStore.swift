@@ -8,11 +8,16 @@
 import Foundation
 import SwiftData
 
+enum TaskStoreError: Error {
+	case taskNotFound
+}
+
 protocol TaskStoreProtocol: Actor {
 	
 	func taskUpdatesStream() -> NotificationCenter.Notifications
 	func addTask(_ task: TaskItem) throws
 	func fetchTasks() async throws -> [TaskItem]
+	func updateTask(_ task: TaskItem) throws
 	func deleteTask(_ task: TaskItem) throws
 	
 	// Category methods
@@ -55,6 +60,25 @@ actor TaskStore: TaskStoreProtocol {
 				dueDate: $0.dueDate
 			)
 		}
+	}
+	
+	func updateTask(_ task: TaskItem) throws {
+		let taskId = task.id
+		let fetchDescriptor = FetchDescriptor<TaskModel>(
+			predicate: #Predicate<TaskModel> { $0.id == taskId }
+		)
+		let existingTasks = try modelContext.fetch(fetchDescriptor)
+		
+		guard let existingTask = existingTasks.first else {
+			throw TaskStoreError.taskNotFound
+		}
+		
+		existingTask.name = task.name
+		existingTask.category = task.category
+		existingTask.status = task.status
+		existingTask.dueDate = task.dueDate
+		
+		try modelContext.save()
 	}
 	
 	func deleteTask(_ task: TaskItem) throws {

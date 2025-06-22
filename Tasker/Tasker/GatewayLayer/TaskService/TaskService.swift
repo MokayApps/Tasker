@@ -30,6 +30,10 @@ final class TaskService: TaskServiceProtocol {
 		return try await store.fetchTasks()
 	}
 	
+	func updateTask(_ task: TaskItem) async throws {
+		try await store.updateTask(task)
+	}
+	
 	func deleteTask(_ task: TaskItem) async throws {
 		try await store.deleteTask(task)
 	}

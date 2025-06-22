@@ -13,6 +13,7 @@ public protocol TaskServiceProtocol: AnyObject, Sendable {
 	func taskUpdatesStream() async -> NotificationCenter.Notifications
 	func addTask(_ task: TaskItem) async throws
 	func fetchTasks() async throws -> [TaskItem]
+	func updateTask(_ task: TaskItem) async throws
 	func deleteTask(_ task: TaskItem) async throws
 	
 	// Category methods
