@@ -23,20 +23,7 @@ final class NewTaskViewModel: ObservableObject {
 	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
-	}
-	
-	var taskNameBinding: Binding<String> {
-		Binding(
-			get: { self.taskName },
-			set: { self.taskName = $0 }
-		)
-	}
-	
-	var selectedDateBinding: Binding<Date> {
-		Binding(
-			get: { self.selectedDate },
-			set: { self.selectedDate = $0 }
-		)
+		subscribeOnBottomViewModel()
 	}
 	
 	func addTask() {
@@ -67,10 +54,20 @@ final class NewTaskViewModel: ObservableObject {
 	
 	private func subscribeOnBottomViewModel() {
 		bottomViewModel.$viewState
+			.removeDuplicates()
 			.filter { $0 != .initial }
 			.sink { [weak self] _ in
 				guard let self else { return }
-				
+				isKeyboardShown = false
 			}
+			.store(in: &subscriptions)
+		
+		$isKeyboardShown
+			.removeDuplicates()
+			.filter { $0 }
+			.sink { [bottomViewModel] shown in
+				bottomViewModel.viewState = .initial
+			}
+			.store(in: &subscriptions)
 	}
 }
