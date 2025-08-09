@@ -41,23 +41,48 @@ struct NewTaskBottomView: View {
 	
 	private var buttonsView: some View {
 		VStack(spacing: .zero) {
-			CustomizationButtonsView(
-				onCategoryTap: {
+			HStack(spacing: .x1) {
+				Button {
 					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
 						viewModel.viewState = .categoryPicker
 					}
-				},
-				onDateTap: {
+				} label: {
+					VStack(spacing: .zero) {
+						Image(systemName: "number.circle.fill")
+							.typography(.sfSymbolL)
+						Text("CATEGORY")
+					}
+				}
+				.buttonStyle(.newTask(isSelected: viewModel.viewState == .categoryPicker))
+				
+				Button {
 					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
 						viewModel.viewState = .datePicker
 					}
-				},
-				onReminderTap: {
+				} label: {
+					VStack(spacing: .zero) {
+						Image(systemName: "calendar.badge.plus")
+							.typography(.sfSymbolL)
+						Text("DATE")
+					}
+				}
+				.buttonStyle(.newTask(isSelected: viewModel.viewState == .datePicker))
+
+				Button {
 					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
 						viewModel.viewState = .reminder
 					}
+				} label: {
+					VStack(spacing: .zero) {
+						Image(systemName: "bell")
+							.typography(.sfSymbolL)
+						Text("REMINDER")
+					}
 				}
-			)
+				.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
+			}
+			.padding(.horizontal, .x2)
+			
 			NewTaskCreateButtonView(onTap: viewModel.onAddTask)
 		}
 	}
