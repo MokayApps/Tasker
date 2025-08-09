@@ -62,3 +62,11 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 .DS_Store
 .swiftpm
+
+# MCP and Figma Configuration Files
+# These files contain sensitive tokens and should not be committed
+mcp.json
+claude_desktop_config.json
+.env
+*.env
+figma_tokens.json
