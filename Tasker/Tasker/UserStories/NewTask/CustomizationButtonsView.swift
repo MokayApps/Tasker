@@ -9,7 +9,6 @@ import SwiftUI
 import MokayUI
 
 struct CustomizationButtonsView: View {
-	var newTaskFocusState: FocusState<NewTaskFocusState?>.Binding
     let onCategoryTap: () -> Void
     let onDateTap: () -> Void
     let onReminderTap: () -> Void
@@ -21,25 +20,18 @@ struct CustomizationButtonsView: View {
                 title: "CATEGORY",
                 action: onCategoryTap
             )
-			.focusable()
-			.focused(newTaskFocusState, equals: .category)
 
             CustomizationButton(
                 icon: "calendar.badge.plus",
                 title: "DATE",
                 action: onDateTap
             )
-			.focusable()
-			.focused(newTaskFocusState, equals: .date)
 
             CustomizationButton(
                 icon: "bell",
                 title: "REMINDER",
                 action: onReminderTap
             )
-			.focusable()
-			.focused(newTaskFocusState, equals: .reminder)
-
         }
         .frame(height: 60)
         .padding(.horizontal, .x2)

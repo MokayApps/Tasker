@@ -7,24 +7,30 @@
 
 import SwiftUI
 import MokayUI
+import UIKit
+
+final class NewTaskBottomViewModel: ObservableObject {
+	
+	@Published var viewState: NewTaskBottomView.ViewState = .initial
+	@Published var selectedDate: Date = Date()
+	
+	func onAddTask() {
+		
+	}
+	
+}
 
 struct NewTaskBottomView: View {
 	
-//	enum State: CaseIterable {
-//		case initial
-//		case categoryPicker
-//		case datePicker
-//		case reminder
-//	}
+	enum ViewState: CaseIterable {
+		case initial
+		case categoryPicker
+		case datePicker
+		case reminder
+	}
 	
-//	@SwiftUI.State private var state: State = .initial
-	
-	var newTaskFocusState: FocusState<NewTaskFocusState?>.Binding
-    let keyboardHeight: CGFloat
-    let maxKeyboardHeight: CGFloat
-    let selectedDate: Binding<Date>
-    let onAddTask: () -> Void
-    
+	@ObservedObject var viewModel: NewTaskBottomViewModel
+		    
     var body: some View {
         VStack(spacing: .zero) {
             buttonsView
@@ -35,42 +41,39 @@ struct NewTaskBottomView: View {
     private var buttonsView: some View {
         VStack(spacing: .zero) {
             CustomizationButtonsView(
-				newTaskFocusState: newTaskFocusState,
                 onCategoryTap: {
                     withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
-						newTaskFocusState.wrappedValue = .category
-//						newTaskFocusState = .category
+						viewModel.viewState = .categoryPicker
                     }
                 },
                 onDateTap: {
                     withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
-						newTaskFocusState.wrappedValue = .date
-//						newTaskFocusState = .date
+						viewModel.viewState = .datePicker
                     }
                 },
                 onReminderTap: {
                     withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
-						newTaskFocusState.wrappedValue = .reminder
-//						newTaskFocusState = .reminder
+						viewModel.viewState = .reminder
                     }
                 }
             )
-            NewTaskCreateButtonView(onTap: onAddTask)
+			NewTaskCreateButtonView(onTap: viewModel.onAddTask)
         }
     }
     
     @ViewBuilder
     private var contentView: some View {
 //        ZStack {
-			switch newTaskFocusState.wrappedValue {
-			case .keyboard, nil:
-                VStack(spacing: .zero) {
-                    Color.clear
-                }
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: 100)
+			switch viewModel.viewState {
+			case .initial:
+				EmptyView()
+//                VStack(spacing: .zero) {
+//                    Color.clear
+//                }
+//                .frame(maxWidth: .infinity)
+//                .frame(maxHeight: 100)
                 
-            case .category:
+			case .categoryPicker:
                 VStack(spacing: .zero) {
                     Text("Выбор категории")
                         .typography(.h2)
@@ -79,12 +82,12 @@ struct NewTaskBottomView: View {
                 .frame(maxHeight: 300)
                 .background(Color.orange)
                 
-            case .date:
+			case .datePicker:
 //                VStack(spacing: .zero) {
 //                    Spacer()
                     DatePicker(
                         "Выберите дату",
-                        selection: selectedDate,
+						selection: $viewModel.selectedDate,
                         displayedComponents: [.date]
                     )
                     .datePickerStyle(.graphical)
@@ -105,4 +108,4 @@ struct NewTaskBottomView: View {
 //        }
 //        .transition(.move(edge: .bottom))
     }
-} 
+}

@@ -5,16 +5,21 @@
 //  Created by Єгор Привалов on 10.04.2025.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 
 @MainActor
 final class NewTaskViewModel: ObservableObject {
-	var taskName: String = ""
-	var selectedDate: Date = .now
+	@Published var taskName: String = ""
+	@Published var selectedDate: Date = .now
+	@Published var isKeyboardShown: Bool = true
+
+	let bottomViewModel = NewTaskBottomViewModel()
 	
-	@ObservationIgnored
 	private let taskService: TaskServiceProtocol
+	
+	private var subscriptions: Set<AnyCancellable> = []
 	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
@@ -50,5 +55,22 @@ final class NewTaskViewModel: ObservableObject {
 				print(error)
 			}
 		}
+	}
+	
+	func onAppear() {
+		
+	}
+	
+	func keyboardDidDismiss() {
+		bottomViewModel.viewState = .initial
+	}
+	
+	private func subscribeOnBottomViewModel() {
+		bottomViewModel.$viewState
+			.filter { $0 != .initial }
+			.sink { [weak self] _ in
+				guard let self else { return }
+				
+			}
 	}
 }
