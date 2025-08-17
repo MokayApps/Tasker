@@ -107,6 +107,15 @@ extension TaskListView {
 						.buttonStyle(.primaryMedium)
 				}
 			)
+			ErrorStateView(
+				icon: Image(systemName: "list.bullet.clipboard"),
+				title: "No tasks",
+				subtitle: nil,
+				button: {
+					Button("Add category", action: onAddCategoryTapped)
+						.buttonStyle(.primaryMedium)
+				}
+			)
 			Spacer()
 		}
 	}
@@ -219,5 +228,9 @@ extension TaskListView {
 	
 	private func onAddTaskTapped() {
 		router.present(.newTask)
+	}
+	
+	private func onAddCategoryTapped() {
+		router.present(.newCategory)
 	}
 }

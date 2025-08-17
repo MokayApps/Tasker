@@ -13,6 +13,7 @@ struct NewCategoryView: View {
 	@Environment(Router.self) var router
 	@StateObject var viewModel: NewCategoryViewModel
 	@FocusState private var isFocused: Bool
+	@FocusState private var isEmojiFocused: Bool
 	
 	private let colors: [Color] = [.green, .yellow, .orange, .red, .pink, .purple, .blue, .teal, .gray, .brown, .cyan, .mint, .indigo, .black]
 	private let columns = Array(repeating: GridItem(.flexible(), spacing: .x2), count: 7)
@@ -30,14 +31,13 @@ struct NewCategoryView: View {
 				
 				HStack(spacing: .x2) {
 					CustomKeyboardTextfield(input: $viewModel.emoji, keyboardHeight: 300)
-					.focused($isFocused)
-					.typography(.h3)
-					.padding(18.5)
-					.frame(width: 63, height: 63)
-					.background {
-						RoundedRectangle(cornerRadius: .x3)
-							.fill(Color.black.opacity(0.04))
-					}
+						.focused($isEmojiFocused)
+						.padding(18.5)
+						.frame(width: 63, height: 63)
+						.background {
+							RoundedRectangle(cornerRadius: .x3)
+								.fill(Color.black.opacity(0.04))
+						}
 					
 					InputView(text: $viewModel.trackerCategory, placeholder: "Category")
 						.inputViewStyle(.large)
@@ -76,6 +76,7 @@ struct NewCategoryView: View {
 			.contentShape(Rectangle())
 			.onTapGesture {
 				isFocused = false
+				isEmojiFocused = false
 			}
 			.onAppear {
 				let range = 0x1F601...0x1F64F
@@ -95,7 +96,7 @@ struct NewCategoryView: View {
 						.foregroundStyle(Color.green)
 				}
 				.padding(.horizontal, .x2)
-				.padding(.vertical, .x2)
+				.padding(.bottom, .x2)
 		}
 	}
 	
@@ -149,60 +150,72 @@ struct NewCategoryView: View {
 //		.environment(Router(container: .main))
 //}
 
-
 fileprivate struct CustomKeyboardTextfield: UIViewRepresentable {
 	
 	@Binding var input: String
 	var keyboardHeight: CGFloat
-
+	
 	func makeUIView(context: Context) -> UITextField {
 		let textField = UITextField()
 		textField.text = input
-		textField.font = .systemFont(ofSize: 12)
+		textField.font = .systemFont(ofSize: 26)
 		textField.delegate = context.coordinator
 		textField.tintColor = .clear
 		textField.setContentHuggingPriority(.defaultHigh, for: .vertical)
 		textField.setContentHuggingPriority(.defaultLow, for: .horizontal)
 		
-		let AnimalKeyboardViewController = UIHostingController(
-			rootView: EmojiKeyboardView(
-				insertText: { text in
-					textField.text = "\(textField.text ?? "")\(text)"
-				},
-				keyboardHeight: keyboardHeight
-			))
+		let emojiKeyboardView = EmojiKeyboardView(
+			insertText: { text in
+				textField.text = "\(textField.text ?? "")\(text)"
+			},
+			keyboardHeight: keyboardHeight
+		)
 		
-		guard let animalKeyboardView = AnimalKeyboardViewController.view else { return textField }
-		animalKeyboardView.translatesAutoresizingMaskIntoConstraints = false
-
 		let inputView = UIInputView()
+		
+		// TODO: Тут закругление для пикера эможи
+		inputView.backgroundColor = .clear
+		emojiKeyboardView.backgroundColor = .systemBackground
+		inputView.layer.cornerCurve = .continuous
+		emojiKeyboardView.layer.cornerCurve = .continuous
+		
+		emojiKeyboardView.layer.cornerRadius = 16
+		emojiKeyboardView.clipsToBounds = true
+		inputView.layer.cornerRadius = 16
+		inputView.clipsToBounds = true
+		
 		inputView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreen.main.bounds.width, height: keyboardHeight))
-
-		inputView.addSubview(animalKeyboardView)
+		
+		inputView.addSubview(emojiKeyboardView)
+		emojiKeyboardView.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
-			animalKeyboardView.bottomAnchor.constraint(equalTo: inputView.bottomAnchor),
-			animalKeyboardView.widthAnchor.constraint(equalToConstant: inputView.frame.width)
+			emojiKeyboardView.topAnchor.constraint(equalTo: inputView.topAnchor),
+			emojiKeyboardView.leadingAnchor.constraint(equalTo: inputView.leadingAnchor),
+			emojiKeyboardView.trailingAnchor.constraint(equalTo: inputView.trailingAnchor),
+			emojiKeyboardView.bottomAnchor.constraint(equalTo: inputView.bottomAnchor)
 		])
-
+		
 		textField.inputView = inputView
 		return textField
 	}
-
-	func updateUIView(_ uiView: UITextField, context: Context) {}
+	
+	func updateUIView(_ uiView: UITextField, context: Context) {
+		uiView.text = input
+	}
 	
 	func makeCoordinator() -> Coordinator {
 		Coordinator(self)
 	}
-
+	
 	class Coordinator: NSObject, UITextFieldDelegate {
 		var parent: CustomKeyboardTextfield
-
+		
 		init(_ control: CustomKeyboardTextfield) {
 			self.parent = control
 			super.init()
 		}
-
+		
 		func textFieldDidChangeSelection(_ textField: UITextField) {
 			guard let text = textField.text else { return }
 			let lastChar = String(text.suffix(1))
