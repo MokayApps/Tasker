@@ -118,14 +118,10 @@ struct NewTaskBottomView: View {
 			.datePickerStyle(.graphical)
 			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .reminder:
-			VStack(spacing: .zero) {
-				Text("Напоминание")
-					.typography(.h2)
-			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.frame(maxHeight: 300)
-			.background(Color.blue)
-			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
+			NewTaskRemindView()
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.frame(maxHeight: 300)
+				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		}
 	}
 }
