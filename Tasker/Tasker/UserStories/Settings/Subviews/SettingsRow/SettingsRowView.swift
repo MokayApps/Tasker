@@ -20,7 +20,7 @@ struct SettingsRow: View {
                             .foregroundStyle(color)
                             .frame(width: .x3, height: .x3)
                     } else {
-                        Image(systemName: viewModel.leadingImageName)
+                        Image(viewModel.leadingImageName)
                             .frame(width: .x3, height: .x3)
                     }
                 },
