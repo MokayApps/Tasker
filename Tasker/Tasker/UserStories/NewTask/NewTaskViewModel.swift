@@ -38,7 +38,7 @@ final class NewTaskViewModel: ObservableObject {
 				category: "Mock task",
 				status: "Mock task",
 				createdAt: Date(),
-				dueDate: Date()
+				dueDate: bottomViewModel.selectedDate
 			)
 			do {
 				try await taskService.addTask(task)
