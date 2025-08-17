@@ -13,9 +13,10 @@ final class NewTaskBottomViewModel: ObservableObject {
 	
 	@Published var viewState: NewTaskBottomView.ViewState = .initial
 	@Published var selectedDate: Date = Date()
+	var onAddTaskCompletion: (() -> Void)?
 	
 	func onAddTask() {
-		
+		onAddTaskCompletion?()
 	}
 	
 }

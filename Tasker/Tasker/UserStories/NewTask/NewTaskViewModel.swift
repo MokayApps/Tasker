@@ -23,6 +23,10 @@ final class NewTaskViewModel: ObservableObject {
 	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
+		bottomViewModel.onAddTaskCompletion = { [weak self] in
+			guard let self else { return }
+			addTask()
+		}
 		subscribeOnBottomViewModel()
 	}
 	
