@@ -70,18 +70,28 @@ struct NewTaskBottomView: View {
 				}
 				.buttonStyle(.newTask(isSelected: viewModel.viewState == .datePicker))
 
-				Button {
-					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
-						viewModel.viewState = .reminder
-					}
+				Menu {
+					NewTaskRemindView()
 				} label: {
-					VStack(spacing: .zero) {
-						Image(systemName: "bell")
-							.typography(.sfSymbolL)
-						Text("REMINDER")
+					Button {
+						print("TEST")
+					} label: {
+						VStack(spacing: .zero) {
+							Image(systemName: "bell")
+								.typography(.sfSymbolL)
+							Text("REMINDER")
+						}
 					}
+					.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
 				}
-				.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
+//				Button {
+//					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
+//						viewModel.viewState = .reminder
+//					}
+//				} label: {
+//
+//				}
+//				.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
 			}
 			.padding(.horizontal, .x2)
 			

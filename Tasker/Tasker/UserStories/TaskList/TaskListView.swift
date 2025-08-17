@@ -92,6 +92,9 @@ extension TaskListView {
 				Section {
 					ForEach(section.rows) { task in
 						TaskRow(viewModel: task)
+							.contextMenu {
+								contextMenu(for: task)
+							}
 					}
 				} header: {
 					Text(section.title)
@@ -219,6 +222,59 @@ extension TaskListView {
 					isExpanded = true
 					NotificationCenter.default.post(name: .searchViewDidOpen, object: nil)
 				}
+			}
+		}
+	}
+	
+	@ViewBuilder
+	private func contextMenu(for task: TaskRowViewModel) -> some View {
+		Section {
+			Button {
+				print("Mark as Done")
+			} label: {
+				HStack {
+					Text("Mark as Done")
+					Image(systemName: "checkmark.square.fill")
+						.symbolRenderingMode(.palette)
+						.foregroundStyle(Color.white, Color.black)
+				}
+			}
+			Button {
+				print("Edit")
+			} label: {
+				Label("Edit", systemImage: "pencil")
+			}
+			Button {
+				print("Set Reminder")
+			} label: {
+				Label("Set Reminder", systemImage: "bell.fill")
+			}
+		}
+		Menu {
+			Button("🏠 Home") {}
+			Button("🏥 Health") {}
+			Button("🛍️ Shopping") {}
+			Button("🗂️ Work") {}
+		} label: {
+			HStack {
+				Text("🏠 Category")
+			}
+		}
+		Section {
+			Button {
+				print("Duplicate")
+			} label: {
+				Label("Duplicate", systemImage: "plus.square.on.square")
+			}
+			Button {
+				print("Delete Task")
+			} label: {
+				HStack {
+					Text("Delete Task")
+					Image(systemName: "trash.fill")
+						.symbolRenderingMode(.palette)
+				}
+				.foregroundStyle(Color.red)
 			}
 		}
 	}
