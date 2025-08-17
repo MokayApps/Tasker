@@ -99,14 +99,31 @@ struct NewTaskBottomView: View {
 			EmptyView()
 				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .categoryPicker:
-			VStack(spacing: .zero) {
-				Text("Выбор категории")
-					.typography(.h2)
-			}
-			.frame(maxWidth: .infinity)
-			.frame(maxHeight: 300)
-			.background(Color.orange)
-			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
+			NewTaskCategoryView()
+				.frame(maxWidth: .infinity)
+				.frame(maxHeight: 300)
+				.background {
+					UnevenRoundedRectangle(
+						topLeadingRadius: .r3,
+						bottomLeadingRadius: .zero,
+						bottomTrailingRadius: .zero,
+						topTrailingRadius: .r3,
+						style: .continuous
+					)
+					.foregroundStyle(Color.bgMain)
+				}
+				.overlay {
+					UnevenRoundedRectangle(
+						topLeadingRadius: .r3,
+						bottomLeadingRadius: .zero,
+						bottomTrailingRadius: .zero,
+						topTrailingRadius: .r3,
+						style: .continuous
+					)
+					.stroke()
+					.foregroundStyle(Color.stroke)
+				}
+				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .datePicker:
 			DatePicker(
 				"Выберите дату",
