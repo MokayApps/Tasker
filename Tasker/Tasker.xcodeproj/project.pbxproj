@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CFF7FAF2E5259960094C4F3 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 1CFF7FAE2E5259960094C4F3 /* OrderedCollections */; };
 		4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */ = {isa = PBXBuildFile; productRef = 4D88723E2D3BC720007E0B4A /* Mokay */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CFF7FAF2E5259960094C4F3 /* OrderedCollections in Frameworks */,
 				4D88723F2D3BC720007E0B4A /* Mokay in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = Tasker;
 			packageProductDependencies = (
 				4D88723E2D3BC720007E0B4A /* Mokay */,
+				1CFF7FAE2E5259960094C4F3 /* OrderedCollections */,
 			);
 			productName = Tasker;
 			productReference = 1C39E6602D29748300A12CCB /* Tasker.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */,
+				1CFF7FAD2E5259960094C4F3 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1C39E6612D29748300A12CCB /* Products */;
@@ -581,6 +585,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1CFF7FAD2E5259960094C4F3 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
 		4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MokayApps/Mokay.git";
@@ -592,6 +604,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1CFF7FAE2E5259960094C4F3 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1CFF7FAD2E5259960094C4F3 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
 		4D88723E2D3BC720007E0B4A /* Mokay */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D88723D2D3BC720007E0B4A /* XCRemoteSwiftPackageReference "Mokay" */;

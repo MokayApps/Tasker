@@ -86,10 +86,23 @@ extension TaskListView {
 		}
 	}
 	
-	private func taskGrid(_ tasks: [TaskRowViewModel]) -> some View {
+	private func taskGrid(_ sections: [TaskListSection]) -> some View {
 		LazyVGrid(columns: gridItems) {
-			ForEach(tasks) { task in
-				TaskRow(viewModel: task)
+			ForEach(sections) { section in
+				Section {
+					ForEach(section.rows) { task in
+						TaskRow(viewModel: task)
+					}
+				} header: {
+					Text(section.title)
+						.typography(.h2)
+						.foregroundStyle(Color.textSecondary)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.padding(.leading, .x1)
+						.padding(.bottom, .x1)
+				} footer: {
+					EmptyView()
+				}
 			}
 		}
 		.padding(.x2)
