@@ -70,3 +70,6 @@ claude_desktop_config.json
 .env
 *.env
 figma_tokens.json
+
+# Node.js
+node_modules/

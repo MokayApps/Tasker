@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "xcodebuildmcp": "^1.11.2"
+  }
+}

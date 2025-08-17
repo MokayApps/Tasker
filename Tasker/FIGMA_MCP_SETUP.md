@@ -99,3 +99,4 @@ curl -H "X-Figma-Token: YOUR_TOKEN" https://api.figma.com/v1/me
 # Запустить MCP сервер для тестирования (с вашим токеном)
 npx figma-developer-mcp --figma-api-key=YOUR_FIGMA_API_KEY --stdio
 ```
+
