@@ -32,6 +32,7 @@ struct NewTaskBottomView: View {
 	
 	@ObservedObject var viewModel: NewTaskBottomViewModel
 	@Namespace private var animationNamespace
+	@Environment(\.dismiss) private var dismiss
 	
 	var body: some View {
 		VStack(spacing: .zero) {
@@ -84,7 +85,10 @@ struct NewTaskBottomView: View {
 			}
 			.padding(.horizontal, .x2)
 			
-			NewTaskCreateButtonView(onTap: viewModel.onAddTask)
+			NewTaskCreateButtonView {
+				viewModel.onAddTask()
+				dismiss()
+			}
 		}
 	}
 	
