@@ -102,26 +102,11 @@ struct NewTaskBottomView: View {
 			NewTaskCategoryView()
 				.frame(maxWidth: .infinity)
 				.frame(maxHeight: 300)
-				.background {
-					UnevenRoundedRectangle(
-						topLeadingRadius: .r3,
-						bottomLeadingRadius: .zero,
-						bottomTrailingRadius: .zero,
-						topTrailingRadius: .r3,
-						style: .continuous
-					)
-					.foregroundStyle(Color.bgMain)
-				}
-				.overlay {
-					UnevenRoundedRectangle(
-						topLeadingRadius: .r3,
-						bottomLeadingRadius: .zero,
-						bottomTrailingRadius: .zero,
-						topTrailingRadius: .r3,
-						style: .continuous
-					)
-					.stroke()
-					.foregroundStyle(Color.stroke)
+				.overlay(alignment: .top) {
+					Rectangle()
+						.foregroundStyle(Color.stroke)
+						.frame(maxWidth: .infinity)
+						.frame(height: 1)
 				}
 				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .datePicker:

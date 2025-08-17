@@ -38,8 +38,11 @@ struct NewTaskCategoryView: View {
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, .x05)
-						.background(in: RoundedRectangle(cornerRadius: .r2))
-						.backgroundStyle(Color.secondaryBlue)
+						.background(Color.secondaryBlue, in: RoundedRectangle(cornerRadius: .r2))
+						.overlay {
+							RoundedRectangle(cornerRadius: .r2)
+								.stroke(Color.accentBlue, lineWidth: 1.0)
+						}
 					}
 				}
 			}
