@@ -41,11 +41,11 @@ class SettingsRowViewModel: Identifiable, ObservableObject {
         case .faceID:
             "faceid"
         case .telegram:
-            "questionmark.diamond"
+            "telegram"
         case .email:
             "envelope.fill"
         case .rateApp:
-            "questionmark.diamond"
+            "appStore"
         case .about:
             "info.circle.fill"
         case .faq, .termsOfService, .privacyPolicy:
