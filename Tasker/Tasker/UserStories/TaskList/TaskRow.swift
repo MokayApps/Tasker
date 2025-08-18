@@ -22,15 +22,11 @@ struct TaskRow: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.x2)
-        .background {
-            if viewModel.isCompleted {
-                RoundedRectangle(cornerRadius: 34)
-                    .fill(Color.green.opacity(0.3))
-            } else {
-                RoundedRectangle(cornerRadius: 34)
-                    .fill(Color.red.opacity(0.3))
-            }
-        }
+		.background(
+			viewModel.isCompleted ? Color.secondaryGreen :  .secondaryRed,
+			in: RoundedRectangle(cornerRadius: .r2)
+		)
+		.contentShape(RoundedRectangle(cornerRadius: .r2))
         .onTapGesture {
             viewModel.toggleCompletion()
         }

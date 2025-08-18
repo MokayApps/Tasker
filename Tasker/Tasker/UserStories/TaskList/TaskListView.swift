@@ -256,9 +256,8 @@ extension TaskListView {
 			Button("🛍️ Shopping") {}
 			Button("🗂️ Work") {}
 		} label: {
-			HStack {
-				Text("🏠 Category")
-			}
+			Text("🏠 Category")
+			Text("Home")
 		}
 		Section {
 			Button {
