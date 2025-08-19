@@ -1,0 +1,50 @@
+{
+  "SwiftUI View": {
+    "prefix": "view",
+    "body": [
+      "import SwiftUI",
+      "",
+      "struct ${1:Name}View: View {",
+      "    var body: some View {",
+      "        ${0:Text(\"Hello, World!\")}",
+      "    }",
+      "}",
+      "",
+      "#Preview {",
+      "    ${1:Name}View()",
+      "}"
+    ],
+    "description": "Create a new SwiftUI View"
+  },
+  "ViewModel": {
+    "prefix": "vm",
+    "body": [
+      "@MainActor",
+      "final class ${1:Name}ViewModel: ObservableObject {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Create a new ViewModel class"
+  },
+  "Assembly": {
+    "prefix": "assembly",
+    "body": [
+      "enum ${1:Name}Assembly {",
+      "    static func assembly() -> some View {",
+      "        let viewModel = ${1:Name}ViewModel()",
+      "        return ${1:Name}View(viewModel: viewModel)",
+      "    }",
+      "}"
+    ],
+    "description": "Create a new Assembly"
+  },
+  "Protocol": {
+    "prefix": "proto",
+    "body": [
+      "protocol ${1:Name}Protocol {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Create a new Protocol"
+  }
+}

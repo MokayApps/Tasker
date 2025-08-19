@@ -1,0 +1,36 @@
+# Build output
+build/
+DerivedData/
+*.build/
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+**/xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# CocoaPods
+Pods/
+
+# Generated files
+*.generated.swift
+
+# System files
+.DS_Store
+*.swp
+*~
+
+# Test coverage
+*.coverage
+*.xcresult/
+
+# Asset catalogs (since they're binary)
+*.xcassets/*.imageset/
+*.xcassets/*.appiconset/
