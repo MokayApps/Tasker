@@ -1,5 +1,5 @@
 ---
-description:
+description: Root Cause Analysis & Remediation Protocol	Use this when a bug is persistent and previous, simpler attempts have failed.
 globs:
 alwaysApply: false
 ---
