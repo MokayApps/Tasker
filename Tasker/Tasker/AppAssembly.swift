@@ -19,5 +19,6 @@ struct AppAssembly {
 		TaskServiceAssembly().assemble(container: container)
 		ModelContainerAssembly().assemble(container: container)
 		NewCategoryAssembly().assemble(container: container)
+		NotificationsAssembly().assemble(container: container)
 	}
 }

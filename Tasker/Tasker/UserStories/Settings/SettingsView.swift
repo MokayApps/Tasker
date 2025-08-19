@@ -32,6 +32,8 @@ struct SettingsView: View {
                             .onTapGesture {
                                 if row.type == .categories {
                                     router.push(.categories)
+                                } else if row.type == .notifications {
+                                    router.push(.notifications)
                                 }
                                 viewModel.rowTappedSubject.send(row.type)
                             }

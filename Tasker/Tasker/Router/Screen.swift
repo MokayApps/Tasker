@@ -15,4 +15,5 @@ enum Screen: Int, Hashable, Identifiable {
     case search
     case categories
 	case newCategory
+    case notifications
 }
