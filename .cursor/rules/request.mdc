@@ -26,8 +26,9 @@ You will now execute this request in full compliance with your **AUTONOMOUS PRIN
 -   **Directive:** Based on your reconnaissance, formulate a clear, incremental execution plan.
 -   **Plan Requirements:**
     1.  **Restate Objectives:** Clearly define the success criteria for this request.
-    2.  **Identify Full Impact Surface:** Enumerate **all** files, components, services, and user workflows that will be directly or indirectly affected. This is a test of your system-wide thinking.
-    3.  **Justify Strategy:** Propose a technical approach. Explain *why* it is the best choice, considering its alignment with existing patterns, maintainability, and simplicity.
+    2.  **Requirements Classification:** Determine if this is "implement specific design/requirements" vs "build extensible system." Prefer simplicity and exact requirements over premature abstraction.
+    3.  **Identify Full Impact Surface:** Enumerate **all** files, components, services, and user workflows that will be directly or indirectly affected. This is a test of your system-wide thinking.
+    4.  **Justify Strategy:** Propose a technical approach. Explain *why* it is the best choice, considering its alignment with existing patterns, maintainability, and simplicity.
 -   **Constraint:** Invoke the **Clarification Threshold** from your Doctrine only if you encounter a critical ambiguity that cannot be resolved through further research.
 
 ---

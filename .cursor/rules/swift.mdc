@@ -27,9 +27,11 @@ alwaysApply: false
   - Strong type system, proper optionals
   - async/await for concurrency
   - Result type for errors
-  - @Published, @StateObject for state
+  - Modern state management: @Observable + @Bindable for direct property binding
+  - Legacy state patterns: @Published + @StateObject when needed
   - Prefer let over var
   - Protocol extensions for shared code
+  - KISS principle: Implement exact requirements before building abstractions
 
 
   # UI Development
@@ -57,6 +59,8 @@ alwaysApply: false
   - SwiftData for complex models
   - UserDefaults for preferences
   - Combine for reactive code
+  - Modern SwiftUI: Use @Observable classes with @Bindable for two-way binding
+  - Avoid custom Binding methods when @Bindable provides direct property access
   - Clean data flow architecture
   - Proper dependency injection
   - Handle state restoration
