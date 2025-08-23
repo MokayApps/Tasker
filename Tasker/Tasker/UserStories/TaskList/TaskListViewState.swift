@@ -8,6 +8,6 @@
 enum TaskListViewState {
 	case idle
 	case loading
-	case loaded([TaskRowViewModel])
+	case loaded([TaskListSection])
 	case error
 }

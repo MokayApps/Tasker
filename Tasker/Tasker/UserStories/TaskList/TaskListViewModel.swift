@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Combine
+import OrderedCollections
+import Foundation
 
 @MainActor
 final class TaskListViewModel: ObservableObject {
@@ -93,9 +95,47 @@ final class TaskListViewModel: ObservableObject {
 					taskService: taskService
 				)
 			}
-			viewState = .loaded(viewModels)
+			let sections = viewModels.sliced(by: [.day, .month, .year], for: \.dueDate!)
+				.sorted { $0.key < $1.key }
+				.map { date, slicedEvents in
+					return TaskListSection(
+						title: DateFormatter.sectionTitle.string(from: date),
+						rows: slicedEvents
+					)
+				}
+			viewState = .loaded(sections)
 		} catch {
 			viewState = .error
 		}
 	}
+}
+
+// MARK: - DateFormatter
+extension DateFormatter {
+
+	fileprivate static let sectionTitle: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.setLocalizedDateFormatFromTemplate("EEEE, MMMM d")
+		return formatter
+	}()
+
+}
+
+// MARK: - Array
+extension Array {
+
+	fileprivate func sliced(
+		by dateComponents: Set<Calendar.Component>,
+		for key: KeyPath<Element, Date>
+	) -> OrderedDictionary<Date, [Element]> {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = .current
+		return reduce(into: [:]) { accumulatedElements, element in
+			let components = calendar.dateComponents(dateComponents, from: element[keyPath: key])
+			let date = calendar.date(from: components)!
+			let existing = accumulatedElements[date] ?? []
+			accumulatedElements[date] = existing + [element]
+		}
+	}
+
 }

@@ -23,6 +23,10 @@ final class NewTaskViewModel: ObservableObject {
 	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
+		bottomViewModel.onAddTaskCompletion = { [weak self] in
+			guard let self else { return }
+			addTask()
+		}
 		subscribeOnBottomViewModel()
 	}
 	
@@ -34,7 +38,7 @@ final class NewTaskViewModel: ObservableObject {
 				category: "Mock task",
 				status: "Mock task",
 				createdAt: Date(),
-				dueDate: Date()
+				dueDate: bottomViewModel.selectedDate
 			)
 			do {
 				try await taskService.addTask(task)

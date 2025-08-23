@@ -36,6 +36,8 @@ final class Router: Sendable {
             container.resolve(CategoriesView.self)
 		case .newCategory:
 			container.resolve(NewCategoryView.self)
+        case .notifications:
+            container.resolve(NotificationsView.self)
         }
     }
     
@@ -53,6 +55,8 @@ final class Router: Sendable {
 			RouterView<NewCategoryView>(container: container, router: Router(container: container))
         case .categories:
             RouterView<CategoriesView>(container: container, router: Router(container: container))
+        case .notifications:
+            RouterView<NotificationsView>(container: container, router: Router(container: container))
         }
     }
     

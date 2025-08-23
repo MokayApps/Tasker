@@ -13,9 +13,10 @@ final class NewTaskBottomViewModel: ObservableObject {
 	
 	@Published var viewState: NewTaskBottomView.ViewState = .initial
 	@Published var selectedDate: Date = Date()
+	var onAddTaskCompletion: (() -> Void)?
 	
 	func onAddTask() {
-		
+		onAddTaskCompletion?()
 	}
 	
 }
@@ -31,6 +32,7 @@ struct NewTaskBottomView: View {
 	
 	@ObservedObject var viewModel: NewTaskBottomViewModel
 	@Namespace private var animationNamespace
+	@Environment(\.dismiss) private var dismiss
 	
 	var body: some View {
 		VStack(spacing: .zero) {
@@ -68,22 +70,35 @@ struct NewTaskBottomView: View {
 				}
 				.buttonStyle(.newTask(isSelected: viewModel.viewState == .datePicker))
 
-				Button {
-					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
-						viewModel.viewState = .reminder
-					}
+				Menu {
+					NewTaskRemindView()
 				} label: {
-					VStack(spacing: .zero) {
-						Image(systemName: "bell")
-							.typography(.sfSymbolL)
-						Text("REMINDER")
+					Button {
+						print("TEST")
+					} label: {
+						VStack(spacing: .zero) {
+							Image(systemName: "bell")
+								.typography(.sfSymbolL)
+							Text("REMINDER")
+						}
 					}
+					.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
 				}
-				.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
+//				Button {
+//					withAnimation(.spring(.smooth(duration: 0.2, extraBounce: 0))) {
+//						viewModel.viewState = .reminder
+//					}
+//				} label: {
+//
+//				}
+//				.buttonStyle(.newTask(isSelected: viewModel.viewState == .reminder))
 			}
 			.padding(.horizontal, .x2)
 			
-			NewTaskCreateButtonView(onTap: viewModel.onAddTask)
+			NewTaskCreateButtonView {
+				viewModel.onAddTask()
+				dismiss()
+			}
 		}
 	}
 	
@@ -94,14 +109,16 @@ struct NewTaskBottomView: View {
 			EmptyView()
 				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .categoryPicker:
-			VStack(spacing: .zero) {
-				Text("Выбор категории")
-					.typography(.h2)
-			}
-			.frame(maxWidth: .infinity)
-			.frame(maxHeight: 300)
-			.background(Color.orange)
-			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
+			NewTaskCategoryView()
+				.frame(maxWidth: .infinity)
+				.frame(maxHeight: 300)
+				.overlay(alignment: .top) {
+					Rectangle()
+						.foregroundStyle(Color.stroke)
+						.frame(maxWidth: .infinity)
+						.frame(height: 1)
+				}
+				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .datePicker:
 			DatePicker(
 				"Выберите дату",
@@ -111,14 +128,10 @@ struct NewTaskBottomView: View {
 			.datePickerStyle(.graphical)
 			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		case .reminder:
-			VStack(spacing: .zero) {
-				Text("Напоминание")
-					.typography(.h2)
-			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.frame(maxHeight: 300)
-			.background(Color.blue)
-			.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
+			NewTaskRemindView()
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.frame(maxHeight: 300)
+				.matchedGeometryEffect(id: .geometryId, in: animationNamespace)
 		}
 	}
 }

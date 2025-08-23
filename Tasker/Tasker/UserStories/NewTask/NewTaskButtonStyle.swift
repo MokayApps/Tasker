@@ -12,10 +12,6 @@ public struct NewTaskButtonStyle: ButtonStyle {
 	
 	public let isSelected: Bool
 	
-	private var color: Color {
-		isSelected ? Color.accent.textPrimaryGreen : Color.accent.bgSecondary
-	}
-	
 	public init(isSelected: Bool = false) {
 		self.isSelected = isSelected
 	}
@@ -26,8 +22,12 @@ public struct NewTaskButtonStyle: ButtonStyle {
 			.frame(maxWidth: .infinity)
 			.padding(.top, .x1)
 			.padding(.bottom, .x05)
-			.background(color, in: RoundedRectangle(cornerRadius: 17))
+			.background(Color.accent.bgSecondary, in: RoundedRectangle(cornerRadius: 17))
 			.opacity(configuration.isPressed ? 0.5 : 1.0)
+			.overlay {
+				RoundedRectangle(cornerRadius: 17)
+					.stroke(isSelected ? Color.accentGreen : .clear, lineWidth: 1.0)
+			}
 	}
 }
 
