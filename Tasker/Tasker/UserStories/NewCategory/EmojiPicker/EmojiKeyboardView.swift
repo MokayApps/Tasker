@@ -7,115 +7,6 @@
 
 import UIKit
 
-enum EmojiCategory: Int, CaseIterable {
-	case smileys = 0
-	case animals
-	case food
-	case activities
-	case travel
-	case objects
-	case symbols
-	case flags
-	
-	var image: UIImage {
-		switch self {
-		case .smileys: 		return UIImage(resource: .smile)
-		case .animals: 		return UIImage(resource: .animal)
-		case .food: 		return UIImage(resource: .food)
-		case .activities: 	return UIImage(resource: .sport)
-		case .travel:		return UIImage(resource: .vehicles)
-		case .objects: 		return UIImage(resource: .object)
-		case .symbols: 		return UIImage(resource: .symbol)
-		case .flags: 		return UIImage(resource: .flag)
-		}
-	}
-	
-	var emojis: [String] {
-		switch self {
-		case .smileys:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F600...0x1F64F, // emoticons
-				0x1F970...0x1F976, // additional smileys (🥰…🥶)
-				0x1F917...0x1F92F, // 🤗 … 🤯
-				0x1F9D0...0x1F9FF, // people faces/gestures (🧐 … 🧿)
-			])
-		case .animals:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F400...0x1F43F, // animals
-				0x1F980...0x1F98C, // crab…butterfly
-				0x1F99A...0x1F9A5, // additional animals
-				0x1F331...0x1F337, // plants 🌱…🌷
-				0x1F33C...0x1F341, // more plants 🌼…🍁
-				0x1F33F...0x1F340, // herbs/clover
-				0x1F324...0x1F32C, // weather
-				0x2600...0x26C5     // sun…cloud
-			])
-		case .food:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F32D...0x1F37F, // food & drink
-				0x1F950...0x1F95E, // additional food
-				0x1F960...0x1F96F, // more food
-				0x1F9C0...0x1F9CB  // cheese…beverage-box
-			])
-		case .activities:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F3A0...0x1F3FA, // activities
-				0x1F6B4...0x1F6B6, // cyclists/pedestrians
-				0x1F938...0x1F93E, // sports people
-				0x26BD...0x26BE,   // ⚽️⚾️
-				0x26F3...0x26F3,   // ⛳️
-				0x1F3BE...0x1F3CE  // tennis…racing car
-			])
-		case .travel:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F680...0x1F6FF, // transport & places
-				0x1F30D...0x1F3DD, // globe…buildings
-				0x26F0...0x26FA    // mountain…tent
-			])
-		case .objects:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F4A1...0x1F4FD, // light bulb…film projector
-				0x1F50A...0x1F579, // loud sound…joystick
-				0x1F5A5...0x1F5FF, // desktop…
-				0x1F9E0...0x1F9FF, // brain…
-				0x1FA70...0x1FA95  // tools/objects (🧰…🪕)
-			])
-		case .symbols:
-			return EmojiCategory.makeEmojiStrings(from: [
-				0x1F300...0x1F5FF, // misc symbols & pictographs
-				0x1F90D...0x1F93A, // ❤️‍🔥 etc., hands
-				0x2700...0x27BF,   // dingbats (❤️, ✨, ➕)
-				0x2194...0x21AA,   // arrows subset
-				0x23E9...0x23FA,   // media symbols
-				0x24C2...0x24C2,   // Ⓜ️
-				0x3297...0x3299    // ☑️, ㊙️ ㊗️
-			])
-		case .flags:
-			return EmojiCategory.flagEmojis()
-		}
-	}
-
-	// MARK: - Helpers
-	private static func makeEmojiStrings(from ranges: [ClosedRange<Int>]) -> [String] {
-		// Flatten ranges into scalars, keep only valid emoji that render as standalone glyphs
-		let scalars = ranges.flatMap { $0 }.compactMap { UnicodeScalar($0) }
-		return scalars.compactMap { scalar in
-			return String(Character(scalar))
-		}
-	}
-
-	private static func flagEmojis() -> [String] {
-		// Build flags from ISO region codes by mapping A..Z to regional indicators 0x1F1E6..0x1F1FF
-		let base: UInt32 = 0x1F1E6
-		return Locale.isoRegionCodes.compactMap { code in
-			let upper = code.uppercased()
-			guard upper.count == 2, upper.unicodeScalars.allSatisfy({ $0.value >= 65 && $0.value <= 90 }) else { return nil }
-			let scalars = upper.unicodeScalars.map { UnicodeScalar(base + ($0.value - 65))! }
-			return String(scalars.map { Character($0) })
-		}
-	}
-}
-
 class EmojiKeyboardView: UIView {
 	typealias Section = EmojiCategory
 	
@@ -148,6 +39,7 @@ class EmojiKeyboardView: UIView {
 		cv.showsVerticalScrollIndicator = false
 		cv.alwaysBounceVertical = false
 		cv.alwaysBounceHorizontal = false
+		cv.decelerationRate = .fast
 		cv.delegate = self
 		cv.translatesAutoresizingMaskIntoConstraints = false
 		return cv
@@ -229,7 +121,6 @@ class EmojiKeyboardView: UIView {
 	private func makeLayout() -> UICollectionViewCompositionalLayout {
 		let config = UICollectionViewCompositionalLayoutConfiguration()
 		config.scrollDirection = .horizontal
-		config.interSectionSpacing = 32
 
 		let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, env in
 			let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(32), heightDimension: .absolute(32))
@@ -253,7 +144,6 @@ class EmojiKeyboardView: UIView {
 	
 	private func setupCollectionView() {
 		let cellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, EmojiItem> { cell, indexPath, item in
-			// Configure a lightweight label, centered
 			let tag = 999
 			let lbl: UILabel
 			if let existing = cell.contentView.viewWithTag(tag) as? UILabel {
@@ -300,6 +190,43 @@ class EmojiKeyboardView: UIView {
 // MARK: - UICollectionViewDelegate
 
 extension EmojiKeyboardView: UICollectionViewDelegate {
+	func scrollViewWillEndDragging(
+		_ scrollView: UIScrollView,
+		withVelocity velocity: CGPoint,
+		targetContentOffset: UnsafeMutablePointer<CGPoint>
+	) {
+		let proposedX = targetContentOffset.pointee.x
+		let bounds = collectionView.bounds
+		let layout = collectionView.collectionViewLayout
+		
+		let searchRect = CGRect(
+			x: max(proposedX - 200, 0),
+			y: 0,
+			width: bounds.width + 400,
+			height: bounds.height
+		)
+		guard let attributes = layout.layoutAttributesForElements(in: searchRect)?.filter({ $0.representedElementCategory == .cell }),
+			  !attributes.isEmpty else { return }
+		
+		let nearest = attributes.min(by: { abs($0.frame.minX - proposedX) < abs($1.frame.minX - proposedX) })!
+		var targetX = nearest.frame.minX
+		
+		if abs(velocity.x) > 0.2 {
+			if velocity.x > 0, let next = attributes.filter({ $0.frame.minX > nearest.frame.minX })
+				.min(by: { $0.frame.minX < $1.frame.minX }) {
+				targetX = next.frame.minX
+			} else if velocity.x < 0, let prev = attributes.filter({ $0.frame.minX < nearest.frame.minX })
+				.max(by: { $0.frame.minX < $1.frame.minX }) {
+				targetX = prev.frame.minX
+			}
+		}
+		
+		let maxX = max(0, scrollView.contentSize.width - bounds.width)
+		targetX = min(max(targetX, 0), maxX)
+
+		targetContentOffset.pointee.x = targetX
+	}
+
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
 		var bestSection = selectedCategory.rawValue

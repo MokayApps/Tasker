@@ -11,7 +11,7 @@ import SwiftUI
 final class NewCategoryViewModel: ObservableObject {
 	@Published var trackerCategory: String = ""
 	@Published var emoji: String = ""
-	@Published var selectedColor: Color?
+	@Published var selectedColor: Color = .gray
 	@Published var isPresentedEmoji: Bool = false
 	
 	private let taskService: TaskServiceProtocol
@@ -26,7 +26,7 @@ final class NewCategoryViewModel: ObservableObject {
 				id: UUID(),
 				name: trackerCategory,
 				icon: emoji,
-				color: selectedColor?.toHex() ?? "#000000",
+				color: selectedColor.toHex() ?? "#000000",
 				createdAt: Date()
 			)
 			do {

@@ -15,14 +15,22 @@ struct NewCategoryView: View {
 	@FocusState private var isFocused: Bool
 	@FocusState private var isEmojiFocused: Bool
 	
-	private let colors: [Color] = [.green, .yellow, .orange, .red, .pink, .purple, .blue, .teal, .gray, .brown, .cyan, .mint, .indigo, .black]
-	private let columns = Array(repeating: GridItem(.flexible(), spacing: .x2), count: 7)
+	private let colors: [Color] = [.accentGreen, .accentLime, .accentYellow, .accentOrange, .accentRed, .accentRose, .accentPink, .accentFuchsia, .accentPurple, .accentViolet, .accentIndigo, .accentBlue, .accentSkyblue, .accentCyan, .accentTeal, .accentEmerald]
+	private let columns = Array(repeating: GridItem(.flexible(), spacing: .x1), count: 8)
 	
 	var body: some View {
 		ZStack(alignment: .bottom) {
+			Color.bgMain.ignoresSafeArea()
 			VStack {
 				Spacer()
-					.frame(height: .x2)
+					.frame(height: 5)
+				
+				RoundedRectangle(cornerRadius: 2.5)
+					.fill(Color.stroke)
+					.frame(width: 36, height: 5)
+				
+				Spacer()
+					.frame(height: 6)
 				
 				headerView()
 					.frame(height: 40)
@@ -36,7 +44,8 @@ struct NewCategoryView: View {
 						.frame(width: 63, height: 63)
 						.background {
 							RoundedRectangle(cornerRadius: .x3)
-								.fill(Color.black.opacity(0.04))
+								.fill(Color.secondaryGray)
+								.stroke(viewModel.selectedColor, lineWidth: 2)
 						}
 					
 					InputView(text: $viewModel.trackerCategory, placeholder: "Category")
@@ -68,7 +77,7 @@ struct NewCategoryView: View {
 						)
 					}
 				}
-				.padding(.horizontal, 28.75)
+				.padding(.horizontal, 24)
 				.padding(.top, .x2)
 				
 				Spacer()
@@ -85,7 +94,7 @@ struct NewCategoryView: View {
 				viewModel.emoji = emoji
 				
 				DispatchQueue.main.async {
-					self.viewModel.selectedColor = colors.randomElement()
+					self.viewModel.selectedColor = colors.randomElement() ?? .green
 				}
 			}
 			
@@ -105,6 +114,7 @@ struct NewCategoryView: View {
 		ZStack {
 			Text("New Category")
 				.typography(.h4)
+				.foregroundStyle(.textPrimary)
 			
 			HStack {
 				Spacer()
@@ -114,10 +124,9 @@ struct NewCategoryView: View {
 				} label: {
 					Image(.close)
 						.padding(8)
-						.foregroundStyle(.black)
 						.background {
 							RoundedRectangle(cornerRadius: 17, style: .circular)
-								.fill(Color.black.opacity(0.04))
+								.fill(Color.secondaryGray)
 						}
 				}
 			}
@@ -172,18 +181,6 @@ fileprivate struct CustomKeyboardTextfield: UIViewRepresentable {
 		)
 		
 		let inputView = UIInputView()
-		
-		// TODO: Тут закругление для пикера эможи
-		inputView.backgroundColor = .clear
-		emojiKeyboardView.backgroundColor = .systemBackground
-		inputView.layer.cornerCurve = .continuous
-		emojiKeyboardView.layer.cornerCurve = .continuous
-		
-		emojiKeyboardView.layer.cornerRadius = 16
-		emojiKeyboardView.clipsToBounds = true
-		inputView.layer.cornerRadius = 16
-		inputView.clipsToBounds = true
-		
 		inputView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreen.main.bounds.width, height: keyboardHeight))
 		
 		inputView.addSubview(emojiKeyboardView)

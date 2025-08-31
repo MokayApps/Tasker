@@ -3,6 +3,16 @@
     {
       "filename" : "close.pdf",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "close.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
