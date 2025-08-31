@@ -110,7 +110,7 @@ class EmojiKeyboardView: UIView {
 		for (index, button) in categoryButtons.enumerated() {
 			if index == selectedCategory.rawValue {
 				button.tintColor = .textPrimary
-				button.backgroundColor = .secondaryGray
+				button.backgroundColor = .tertiarySystemFill
 			} else {
 				button.tintColor = .textSecondary
 				button.backgroundColor = .clear
