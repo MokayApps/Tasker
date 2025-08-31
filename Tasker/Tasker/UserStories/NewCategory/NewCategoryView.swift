@@ -102,7 +102,7 @@ struct NewCategoryView: View {
 				.frame(height: 56)
 				.background {
 					RoundedRectangle(cornerRadius: 17)
-						.foregroundStyle(Color.green)
+						.foregroundStyle(viewModel.selectedColor)
 				}
 				.padding(.horizontal, .x2)
 				.padding(.bottom, .x2)
