@@ -109,10 +109,10 @@ class EmojiKeyboardView: UIView {
 	private func updateCategorySelection() {
 		for (index, button) in categoryButtons.enumerated() {
 			if index == selectedCategory.rawValue {
-				button.tintColor = .textPrimary
+				button.tintColor = .label
 				button.backgroundColor = .tertiarySystemFill
 			} else {
-				button.tintColor = .textSecondary
+				button.tintColor = .secondaryLabel
 				button.backgroundColor = .clear
 			}
 		}
@@ -121,6 +121,7 @@ class EmojiKeyboardView: UIView {
 	private func makeLayout() -> UICollectionViewCompositionalLayout {
 		let config = UICollectionViewCompositionalLayoutConfiguration()
 		config.scrollDirection = .horizontal
+		config.interSectionSpacing = 0
 
 		let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, env in
 			let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(32), heightDimension: .absolute(32))
@@ -135,7 +136,8 @@ class EmojiKeyboardView: UIView {
 			
 			let section = NSCollectionLayoutSection(group: group)
 			section.interGroupSpacing = 16
-			section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 24, bottom: 11, trailing: 24)
+			let isLast = sectionIndex == EmojiCategory.allCases.count - 1
+			section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 11, trailing: isLast ? 24 : 0)
 			return section
 		}, configuration: config)
 
@@ -180,9 +182,19 @@ class EmojiKeyboardView: UIView {
 	@objc private func categoryTapped(_ sender: UIButton) {
 		guard let category = EmojiCategory(rawValue: sender.tag) else { return }
 		let section = category.rawValue
-		let indexPath = IndexPath(item: 0, section: section)
+		
 		if dataSource.snapshot().sectionIdentifiers.indices.contains(section) {
-			collectionView.scrollToItem(at: indexPath, at: section == 0 ? .centeredHorizontally : .left, animated: true)
+			collectionView.layoutIfNeeded()
+			let indexPath = IndexPath(item: 0, section: section)
+			if let attrs = collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath) {
+				let leftInset = CGFloat(16)
+				var targetX = attrs.frame.minX - leftInset
+				let maxX = max(0, collectionView.contentSize.width - collectionView.bounds.width)
+				targetX = min(max(0, targetX), maxX)
+				collectionView.setContentOffset(CGPoint(x: targetX, y: collectionView.contentOffset.y), animated: true)
+			} else {
+				collectionView.scrollToItem(at: indexPath, at: .left, animated: true)
+			}
 		}
 	}
 }
@@ -198,7 +210,8 @@ extension EmojiKeyboardView: UICollectionViewDelegate {
 		let proposedX = targetContentOffset.pointee.x
 		let bounds = collectionView.bounds
 		let layout = collectionView.collectionViewLayout
-		
+		let leftInset = CGFloat(16) // 24
+
 		let searchRect = CGRect(
 			x: max(proposedX - 200, 0),
 			y: 0,
@@ -207,20 +220,25 @@ extension EmojiKeyboardView: UICollectionViewDelegate {
 		)
 		guard let attributes = layout.layoutAttributesForElements(in: searchRect)?.filter({ $0.representedElementCategory == .cell }),
 			  !attributes.isEmpty else { return }
-		
-		let nearest = attributes.min(by: { abs($0.frame.minX - proposedX) < abs($1.frame.minX - proposedX) })!
-		var targetX = nearest.frame.minX
-		
+
+		// Ищем ближайшую «якорную» позицию с учетом требуемого левого отступа
+		let nearest = attributes.min(by: { abs(($0.frame.minX - leftInset) - proposedX) < abs(($1.frame.minX - leftInset) - proposedX) })!
+		var targetX = nearest.frame.minX - leftInset
+
 		if abs(velocity.x) > 0.2 {
-			if velocity.x > 0, let next = attributes.filter({ $0.frame.minX > nearest.frame.minX })
-				.min(by: { $0.frame.minX < $1.frame.minX }) {
-				targetX = next.frame.minX
-			} else if velocity.x < 0, let prev = attributes.filter({ $0.frame.minX < nearest.frame.minX })
-				.max(by: { $0.frame.minX < $1.frame.minX }) {
-				targetX = prev.frame.minX
+			if velocity.x > 0,
+			   let next = attributes
+					.filter({ ($0.frame.minX - leftInset) > (nearest.frame.minX - leftInset) })
+					.min(by: { ($0.frame.minX - leftInset) < ($1.frame.minX - leftInset) }) {
+				targetX = next.frame.minX - leftInset
+			} else if velocity.x < 0,
+					  let prev = attributes
+					.filter({ ($0.frame.minX - leftInset) < (nearest.frame.minX - leftInset) })
+					.max(by: { ($0.frame.minX - leftInset) < ($1.frame.minX - leftInset) }) {
+				targetX = prev.frame.minX - leftInset
 			}
 		}
-		
+
 		let maxX = max(0, scrollView.contentSize.width - bounds.width)
 		targetX = min(max(targetX, 0), maxX)
 
