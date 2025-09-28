@@ -42,10 +42,16 @@ struct NewCategoryView: View {
 						.focused($isEmojiFocused)
 						.padding(18.5)
 						.frame(width: 63, height: 63)
+						.contentShape(Rectangle())
+						.onTapGesture { isEmojiFocused = true }
 						.background {
 							RoundedRectangle(cornerRadius: .x3)
 								.fill(Color.secondaryGray)
-								.stroke(viewModel.selectedColor, lineWidth: 2)
+							
+							if isEmojiFocused {
+								RoundedRectangle(cornerRadius: .x3)
+									.stroke(viewModel.selectedColor, lineWidth: 2)
+							}
 						}
 					
 					InputView(
@@ -60,10 +66,6 @@ struct NewCategoryView: View {
 					.focused($isFocused)
 					.frame(maxWidth: .infinity)
 					.frame(height: 63)
-					.overlay {
-						RoundedRectangle(cornerRadius: .x3)
-							.stroke(viewModel.selectedColor, lineWidth: 2)
-					}
 				}
 				.padding(.horizontal, .x2)
 				
