@@ -48,11 +48,22 @@ struct NewCategoryView: View {
 								.stroke(viewModel.selectedColor, lineWidth: 2)
 						}
 					
-					InputView(text: $viewModel.trackerCategory, placeholder: "Category")
-						.inputViewStyle(.large)
-						.focused($isFocused)
-						.frame(maxWidth: .infinity)
-						.frame(height: 63)
+					InputView(
+						text: $viewModel.trackerCategory,
+						placeholder: "Category",
+						caretColor: Binding<UIColor>(
+							get: { viewModel.selectedColor.uiColor },
+							set: { viewModel.selectedColor = Color(uiColor: $0) }
+						)
+					)
+					.inputViewStyle(.large)
+					.focused($isFocused)
+					.frame(maxWidth: .infinity)
+					.frame(height: 63)
+					.overlay {
+						RoundedRectangle(cornerRadius: .x3)
+							.stroke(viewModel.selectedColor, lineWidth: 2)
+					}
 				}
 				.padding(.horizontal, .x2)
 				
@@ -114,7 +125,7 @@ struct NewCategoryView: View {
 		ZStack {
 			Text("New Category")
 				.typography(.h4)
-				.foregroundStyle(.textPrimary)
+				.foregroundStyle(Color.textPrimary)
 			
 			HStack {
 				Spacer()
