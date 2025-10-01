@@ -12,31 +12,28 @@ import MokayDI
 
 struct TaskListView: View {
 	
-	@State private var offsetY: CGFloat = 0
-	@State private var isExpanded: Bool = false
-	
 	@StateObject var viewModel: TaskListViewModel
 	@Environment(Router.self) var router
 	
 	private let gridItems = [
-		GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1),
-		GridItem(.flexible(minimum: 100, maximum: 300), spacing: .x1)
+		GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: .x1)
 	]
-	
-	private var progress: CGFloat {
-		max(min(offsetY / 100, 1), 0)
-	}
 	
 	var body: some View {
 		VStack(spacing: .x2) {
 			headerView
 			scrollView
 		}
-		.overlay(overlayView)
-		.scrollTargetBehavior(scrollBehavior)
-		.animation(.smooth(duration: 0.3, extraBounce: 0), value: isExpanded)
-		.onReceive(NotificationCenter.default.publisher(for: .searchViewDidClose)) { _ in
-			isExpanded = false
+		.searchable(text: viewModel.searchTextBinding)
+		.toolbar {
+			// Top
+			paywallToolbarItem
+			settingsToolbarItem
+			
+			// Bottom
+			DefaultToolbarItem(kind: .search, placement: .bottomBar)
+			ToolbarSpacer(placement: .bottomBar)
+			addTaskToolbarItem
 		}
 		.navigationBarTitleDisplayMode(.inline)
 	}
@@ -46,25 +43,15 @@ struct TaskListView: View {
 extension TaskListView {
 	private var headerView: some View {
 		HStack(spacing: .x2) {
-			searchField
-			settingsOrCancelButton
+			callendarView
 		}
 		.padding(.horizontal, .x2)
-		.frame(height: 56)
+		.frame(height: 77)
 	}
 	
 	private var scrollView: some View {
-		ZStack(alignment: .bottomTrailing) {
-			ScrollView(.vertical) {
-				contentView
-					.offset(y: isExpanded ? -offsetY : 0)
-					.onGeometryChange(for: CGFloat.self) {
-						$0.frame(in: .scrollView(axis: .vertical)).minY
-					} action: { offsetY = $0 }
-			}
-			
-			addTaskButton
-				.offset(x: -.x3)
+		ScrollView(.vertical) {
+			contentView
 		}
 	}
 	
@@ -86,6 +73,10 @@ extension TaskListView {
 		}
 	}
 	
+	private var callendarView: some View {
+		Text("Calendar View")
+	}
+	
 	private func taskGrid(_ sections: [TaskListSection]) -> some View {
 		LazyVGrid(columns: gridItems) {
 			ForEach(sections) { section in
@@ -95,6 +86,7 @@ extension TaskListView {
 							.contextMenu {
 								contextMenu(for: task)
 							}
+							.padding(.horizontal, .x2)
 					}
 				} header: {
 					Text(section.title)
@@ -108,7 +100,6 @@ extension TaskListView {
 				}
 			}
 		}
-		.padding(.x2)
 	}
 	
 	private var emptyStateView: some View {
@@ -123,15 +114,6 @@ extension TaskListView {
 						.buttonStyle(.primaryMedium)
 				}
 			)
-			ErrorStateView(
-				icon: Image(systemName: "list.bullet.clipboard"),
-				title: "No tasks",
-				subtitle: nil,
-				button: {
-					Button("Add category", action: onAddCategoryTapped)
-						.buttonStyle(.primaryMedium)
-				}
-			)
 			Spacer()
 		}
 	}
@@ -142,96 +124,6 @@ extension TaskListView {
 		} actions: {
 			Button("Reload", action: viewModel.reload)
 				.buttonStyle(.primaryMedium)
-		}
-	}
-	
-	private var searchField: some View {
-		HStack(spacing: .x1) {
-			Image(.search)
-				.resizable()
-				.frame(width: 24, height: 24)
-			
-			TextField("", text: .constant(""), prompt: placeholderText)
-				.typography(.body)
-				.foregroundColor(Color.accent.primary)
-				.allowsHitTesting(false)
-		}
-		.padding(.x2)
-		.background {
-			RoundedRectangle(cornerRadius: 24)
-				.foregroundStyle(Color.accent.bgSecondary)
-		}
-		.contentShape(Rectangle())
-		.onTapGesture {
-			isExpanded = true
-			NotificationCenter.default.post(name: .searchViewDidOpen, object: nil)
-		}
-	}
-	
-	private var settingsOrCancelButton: some View {
-		Button(action: onSettingsTapped) {
-			Image("control")
-		}
-		.buttonStyle(.secondarySmall)
-		.opacity(isExpanded ? 0 : 1)
-		.overlay(alignment: .trailing) {
-			cancelButton
-				.opacity(isExpanded ? 1 : 0)
-				.fixedSize()
-		}
-		.padding(.leading, isExpanded ? .x3 : .zero)
-	}
-	
-	private var cancelButton: some View {
-		Button {
-			isExpanded = false
-		} label: {
-			Text("CANCEL")
-				.typography(.smallLabel)
-				.padding(.x1)
-				.frame(height: 40)
-				.background {
-					RoundedRectangle(cornerRadius: 17)
-						.foregroundStyle(Color.accent.bgSecondary)
-				}
-		}
-	}
-	
-	private var placeholderText: Text {
-		Text("Search")
-			.foregroundStyle(.gray)
-	}
-	
-	private var addTaskButton: some View {
-		Button(action: onAddTaskTapped) {
-			Image("add")
-				.renderingMode(.template)
-				.foregroundStyle(Color.white)
-		}
-		.padding(24)
-		.background(in: RoundedRectangle(cornerRadius: 24))
-		.backgroundStyle(Color.accent.textPrimaryGreen)
-	}
-	
-	private var overlayView: some View {
-		Rectangle()
-			.fill(.ultraThinMaterial)
-			.background(Color.white.opacity(0.25))
-			.ignoresSafeArea()
-			.overlay {
-				Container.main.resolve(SearchView.self)
-			}
-			.opacity(isExpanded ? 1 : progress)
-	}
-	
-	private var scrollBehavior: OnScrollEnd {
-		OnScrollEnd { dy in
-			DispatchQueue.main.async {
-				if offsetY > 100 || (dy > 1.5 && offsetY > 0) {
-					isExpanded = true
-					NotificationCenter.default.post(name: .searchViewDidOpen, object: nil)
-				}
-			}
 		}
 	}
 	
@@ -283,6 +175,50 @@ extension TaskListView {
 						.symbolRenderingMode(.palette)
 				}
 				.foregroundStyle(Color.red)
+			}
+		}
+	}
+}
+
+// MARK: - ToolbarItems
+extension TaskListView {
+	@ToolbarContentBuilder
+	private var addTaskToolbarItem: some ToolbarContent {
+		ToolbarItem(placement: .bottomBar) {
+			Image(systemName: "plus")
+				.foregroundStyle(Color.white)
+				.typography(.sfSymbolM)
+				.frame(width: 48, height: 48)
+				.contentShape(Circle())
+				.onTapGesture {
+					onAddTaskTapped()
+				}
+				.glassEffect(.regular.interactive().tint(Color.accentGreen))
+		}
+		.sharedBackgroundVisibility(.hidden)
+	}
+	
+	@ToolbarContentBuilder
+	private var settingsToolbarItem: some ToolbarContent {
+		ToolbarItem(placement: .topBarTrailing) {
+			Button(action: onSettingsTapped) {
+				Image(.control)
+			}
+		}
+	}
+	
+	@ToolbarContentBuilder
+	private var paywallToolbarItem: some ToolbarContent {
+		ToolbarItem(placement: .topBarLeading) {
+			Button(action: onSettingsTapped) {
+				HStack(spacing: .x1) {
+					Image(systemName: "star.square.fill")
+						.typography(.sfSymbolL)
+						.foregroundStyle(Color.accentIndigo)
+					Text("PRO")
+						.typography(.smallLabel)
+						.foregroundStyle(Color.textPrimary)
+				}
 			}
 		}
 	}

@@ -37,9 +37,8 @@ struct NewTaskView: View {
 		.toolbar {
 			ToolbarItem(placement: .topBarTrailing) {
 				Button(action: onCloseTapped) {
-					Image("close")
+					Image(.close)
 				}
-				.buttonStyle(.secondarySmall)
 			}
 		}
 		.onAppear {

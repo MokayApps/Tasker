@@ -19,6 +19,15 @@ final class TaskListViewModel: ObservableObject {
 	
 	private var subscriptions: Set<AnyCancellable> = []
 	
+	var searchText: String = ""
+	
+	var searchTextBinding: Binding<String> {
+		Binding(
+			get: { self.searchText },
+			set: { self.searchText = $0 }
+		)
+	}
+	
 	init(taskService: TaskServiceProtocol) {
 		self.taskService = taskService
 	}
