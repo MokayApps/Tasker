@@ -45,8 +45,6 @@ extension TaskListView {
 		HStack(spacing: .x2) {
 			callendarView
 		}
-		.padding(.horizontal, .x2)
-		.frame(height: 77)
 	}
 	
 	private var scrollView: some View {
@@ -74,7 +72,55 @@ extension TaskListView {
 	}
 	
 	private var callendarView: some View {
-		Text("Calendar View")
+		ScrollView(.horizontal, showsIndicators: false) {
+			HStack(spacing: 8) {
+				HStack(spacing: 8) {
+					ForEach(0..<7) { index in
+						VStack(spacing: 4) {
+							Text("5")
+								.typography(.h4)
+							Text("FRI")
+								.typography(.caption)
+						}
+						.padding(.top, 8)
+						.padding(.bottom, 12)
+						.frame(width: 60, height: 60)
+						.background {
+							RoundedRectangle(cornerRadius: .r2)
+								.foregroundStyle(Color.secondaryGray)
+						}
+						.overlay {
+							RoundedRectangle(cornerRadius: .r2)
+								.stroke(Color.accentGreen, lineWidth: 1)
+						}
+					}
+				}
+				
+				ContentMenuView(label: {
+					VStack(spacing: .zero) {
+						Image(systemName: "calendar")
+							.typography(.sfSymbolL)
+						Text("DATE")
+							.typography(.smallLabel)
+					}
+					.frame(width: 60, height: 60)
+					.background {
+						RoundedRectangle(cornerRadius: .r2)
+							.foregroundStyle(Color.secondaryGray)
+					}
+				}, style: .plain) {
+					DatePicker(
+						"Select date",
+						selection: $viewModel.selectedDate,
+						displayedComponents: [.date]
+					)
+					.datePickerStyle(.graphical)
+					.frame(width: 300, height: 300)
+				}
+			}
+			.padding(.horizontal, .x2)
+			.padding(.vertical, .x1)
+		}
 	}
 	
 	private func taskGrid(_ sections: [TaskListSection]) -> some View {
@@ -88,13 +134,6 @@ extension TaskListView {
 							}
 							.padding(.horizontal, .x2)
 					}
-				} header: {
-					Text(section.title)
-						.typography(.h2)
-						.foregroundStyle(Color.textSecondary)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.padding(.leading, .x1)
-						.padding(.bottom, .x1)
 				} footer: {
 					EmptyView()
 				}

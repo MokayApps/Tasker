@@ -15,6 +15,8 @@ final class TaskListViewModel: ObservableObject {
     
 	@Published var viewState: TaskListViewState = .idle
 	
+	@Published var selectedDate: Date = Date()
+	
 	private let taskService: TaskServiceProtocol
 	
 	private var subscriptions: Set<AnyCancellable> = []
